@@ -1,0 +1,204 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+    --primary-color: rgb(112, 16, 72); 
+    --primary-hover: rgb(80, 10, 50);
+    --bg-light: #f4f7f6;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    min-height: 100vh;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%; 
+    background: rgb(240, 227, 227);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.596);
+}
+
+.header-name {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.selection-top {
+    display: flex;
+    gap: 10px;
+}
+
+.body-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+     
+    padding: 15px;
+}
+
+.Login-div {
+    background: rgb(241, 238, 238);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.384);
+    
+    width: 500px;
+    max-width: 600px;
+    box-sizing: border-box;
+}
+
+.Login-pgh {
+    font-size: 35px;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-size: 20px;
+    font-style: oblique;
+    color: #000000;
+    margin-bottom: -10px; 
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+input {
+    padding: 12px;
+    border: 1.5px solid #ddd;
+    border-radius: 10px;
+    font-size: 20px;    
+    transition: border-color 0.3s;
+    transform: translateY(3px);
+    
+}
+
+input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    border-radius: 15px;
+    box-shadow: 0 0 0 3px rgba(112, 16, 72, 0.1);
+    transition-duration:0.5s;
+
+}
+
+#btn-Login, #btnSignUp, #btnLogout {
+    width: 30%;
+    padding: 14px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all ease-in-out 0.5s;
+}
+
+#btn-Login:hover, #btnSignUp:hover, #btnLogout:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-5px);
+    font-size: 18px;
+}
+
+.selection-btm {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: #292323;
+}
+
+.selection-btm button {
+    background: rgba(236, 99, 179, 0.26);
+    width: 30%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    color: var(--primary-color);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration: none;
+    transition: all ease-in-out 0.3s;
+    
+}
+.selection-btm button:hover{
+    transition-duration: 0.2s;
+    transform: translateY(3px); 
+}
+#signup{
+    width: 35%;
+    padding: 14px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all ease-in-out 0.3s;
+}
+.form-group{
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+#role {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #333;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    appearance: none; /* Removes default browser arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="%23803060" d="M5 7l5 5 5-5z"/></svg>'); 
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+/* Focus State */
+#role:focus {
+    outline: none;
+    border-color: #803060; 
+    box-shadow: 0 0 5px rgba(128, 48, 96, 0.2);
+}
+
+#role option {
+    padding: 10px;
+    background-color: #ffffff;
+    color: #333;
+}
+
+#role option:hover,
+#role option:focus,
+#role option:active {
+    background-color: #f2d7e5 !important;
+    color: #803060 !important;
+}
+
+
