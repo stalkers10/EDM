@@ -1,4 +1,4 @@
-<?php include 'database.php'; ?>
+<?php include '../DB/database.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

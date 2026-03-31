@@ -1,12 +1,7 @@
-<!-- ============================================================
-     sidebar.php  –  Left navigation panel
-     Requires: $page variable set before including
-     Requires: $_SESSION['username'] and $_SESSION['email'] set at login
-     ============================================================ -->
+
 
 <nav class="sidebar">
 
-  <!-- Brand + Logged-in Admin Info -->
   <div class="brand">
     <div class="brand-name">EDM ADMIN</div>
     <div class="brand-username">
@@ -19,13 +14,12 @@
     </div>
   </div>
 
-  <!-- Add User Button -->
+ 
   <a href="add_user.php" class="btn-compose">
     <span class="material-icons-outlined">person_add</span>
     Add User
   </a>
 
-  <!-- Navigation Links -->
   <p class="nav-section-label">Main Menu</p>
   <ul class="nav-menu">
 
@@ -64,7 +58,7 @@
     <div class="nav-separator"></div>
 
     <li>
-      <a href="logout.php" class="logout-link">
+      <a href="../login_logout/logout.php" class="logout-link">
         <span class="material-icons-outlined">logout</span>
         Logout
       </a>

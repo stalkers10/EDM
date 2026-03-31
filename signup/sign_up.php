@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up - EDM</title>
-    <link rel="stylesheet" href="Login.css">
+    <link rel="stylesheet" href="../login_logout/Login.css">
     <style>
         #role {
             width: 55%;
@@ -67,7 +67,7 @@
 
                     <p>Aready have an account?</p>
 
-                    <a href="Login.php"><button type="button">Login</button></a>
+                    <a href="../login_logout/Login.php"><button type="button">Login</button></a>
 
                 </div>
             </div>
@@ -87,7 +87,7 @@
         }
     </script>
     <?php
-    include("database.php");
+    include("../DB/database.php");
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -118,7 +118,8 @@
             $security_key = $_POST['security_key'] ?? '';
 
             if ($role === 'admin' && $security_key !== 'Admin123') {
-                echo "<script>alert('Invalid Admin Key'); window.location.href='sign_up.php';</script>";
+                echo "<script>alert('Invalid Admin Key');
+                window.location.href='sign_up.php';</script>";
                 exit();
             }
 
@@ -127,7 +128,7 @@
                  VALUES ('$email', '$username', '$hash', '$phone_num', '$role', 1)";
 
                 if (mysqli_query($conn, $sql_user)) {
-                    echo "<script>alert('Account created successfully!'); window.location.href='Login.php';</script>";
+                    echo "<script>alert('Account created successfully!'); window.location.href='../login_logout/Login.php';</script>";
                 } else {
                     if (mysqli_errno($conn) == 1062) {
                         echo "<script>alert('Duplicate Error: The Username or Email already exists.');</script>";

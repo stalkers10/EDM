@@ -1,0 +1,211 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+    :root {
+      --bg:        #0e0e12;
+      --surface:   #17171d;
+      --border:    rgba(255,255,255,0.07);
+      --accent:    #c8a96e;      /* warm gold */
+      --accent-2:  #e8c98e;
+      --text:      #f0ede8;
+      
+      --card-bg:   #1c1c24;
+    }
+    :root {
+    --bg: #0e0e12;
+    --surface: #17171d;
+    --accent: #c8a96e;   /* Warm Gold */
+    --accent-2: #e8c98e;
+    --burgundy: #800020; /* Matching your Management Panel header */
+    --text: #f0ede8;
+    --muted:     #7a7870;
+    --card-bg: #1c1c24;
+    --border:    rgba(255,255,255,0.07);
+}
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topnav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .topnav-brand {
+      font-family: 'DM Serif Display', serif;
+      font-size: 20px;
+      letter-spacing: 1px;
+      color: var(--accent);
+    }
+
+    .topnav-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .topnav-user .avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #8b5e2e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .topnav-user .user-info { text-align: right; }
+    .topnav-user .user-name { font-size: 13.5px; font-weight: 600; color: var(--text); }
+    .topnav-user .user-email { font-size: 11px; color: var(--muted); }
+
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 12.5px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-logout:hover { border-color: #e07070; color: #e07070; }
+    .btn-logout .material-icons-outlined { font-size: 15px; }
+
+
+    .main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+    }
+
+    .welcome-card {
+      max-width: 620px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .deco-line {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      margin: 0 auto 28px;
+    }
+
+    .greeting {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(32px, 6vw, 52px);
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .greeting em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .sub {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 18px;
+      text-align: center;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: default;
+    }
+
+    .card:hover {
+      border-color: rgba(200, 169, 110, 0.4);
+      transform: translateY(-3px);
+    }
+
+    .card-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: rgba(200, 169, 110, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      color: var(--accent);
+    }
+
+    .card-icon .material-icons-outlined { font-size: 22px; }
+    .card-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .card-value { font-size: 22px; font-weight: 700; color: var(--text); }
+
+    .notice {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: rgba(200, 169, 110, 0.08);
+      border: 1px solid rgba(200, 169, 110, 0.2);
+      border-radius: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: left;
+    }
+
+    .notice .material-icons-outlined { font-size: 20px; color: var(--accent); flex-shrink: 0; }
+
+    footer {
+      padding: 20px 40px;
+      text-align: center;
+      font-size: 11.5px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .welcome-card > * {
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .deco-line   { animation-delay: 0.05s; }
+    .greeting    { animation-delay: 0.1s; }
+    .sub         { animation-delay: 0.18s; }
+    .cards       { animation-delay: 0.28s; }
+    .notice      { animation-delay: 0.38s; }

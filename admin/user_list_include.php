@@ -1,8 +1,3 @@
-<!-- ============================================================
-     user_list_include.php  –  User Management table page
-     Included by admin_dash.php when $page === 'users'
-     Uses mysqli (matches database.php)
-     ============================================================ -->
 
 <div class="topbar">
   <div>
@@ -13,7 +8,6 @@
 
 <div class="content-card">
 
-  <!-- Card Header -->
   <div class="card-header">
     <h2>Management Panel</h2>
     <a href="add_user.php" class="btn-add">
@@ -22,7 +16,6 @@
     </a>
   </div>
 
-  <!-- Action Buttons (enabled only when a row is selected) -->
   <div class="action-bar">
     <button id="btn-toggle" class="btn btn-toggle btn-disabled">
       <span class="material-icons-outlined">toggle_on</span> Update Status
@@ -87,9 +80,8 @@
     </tbody>
   </table>
 
-</div><!-- /content-card -->
+</div>
 
-<!-- ── Row-selection + button logic ── -->
 <script>
   (function () {
     const tbody     = document.getElementById('user-tbody');

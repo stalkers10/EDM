@@ -1,7 +1,7 @@
 <?php
-include 'database.php';
+include '../DB/database.php';
 
-// Safety check: Ensure the session is started and user is an admin
+// Ensure the session is started and user is an admin
 
 /*if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     echo ("<script> alert('You are not authorized to access this page')</script>");
@@ -32,8 +32,6 @@ switch ($task) {
 
     // 2. DELETE USER
     case 'delete':
-       // $sql = "UPDATE users SET status = 0 WHERE id = $id"; // Optional: Logical delete
-        // OR a physical delete:
         $sql = "DELETE FROM users WHERE id = $id";
 
         if ($conn->query($sql)) {

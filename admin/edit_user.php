@@ -1,7 +1,6 @@
 <?php 
-include 'database.php'; 
+include '../DB/database.php'; 
 
-// 1. Get the User ID from the URL
 if (!isset($_GET['id'])) {
     header("Location: admin_dash.php");
     exit();
@@ -21,7 +20,7 @@ if (!$user) {
 <head>
     <meta charset="UTF-8">
     <title>Edit User - <?= htmlspecialchars($user['username']) ?></title>
-    <link rel="stylesheet" href="admin_style.css">
+    <link rel="stylesheet" href="./admin_styles/admin_style.css">
     <style>
         .edit-form-container {
             max-width: 600px;

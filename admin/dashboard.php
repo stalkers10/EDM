@@ -1,8 +1,3 @@
-<!-- ============================================================
-     dashboard.php  –  Welcome / overview page
-     Included by admin_dash.php when $page === 'dashboard'
-     Uses mysqli (matches database.php)
-     ============================================================ -->
 
 <div class="topbar">
   <div>
@@ -16,7 +11,6 @@
   <h2 class="welcome-heading">System Overview</h2>
   <p class="welcome-sub">Track, manage, and monitor your users from this panel.</p>
 
-  <!-- ── STAT CARDS ── -->
   <?php
     $total    = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM users"))[0];
     $active   = mysqli_fetch_row(mysqli_query($conn, "SELECT COUNT(*) FROM users WHERE status = '1'"))[0];
@@ -66,9 +60,9 @@
       </div>
     </div>
 
-  </div><!-- /stats-grid -->
+  </div>
 
-  <!-- ── RECENT USERS PREVIEW TABLE ── -->
+  <!-- RECENT USERS up to 5--> 
   <p class="recent-label">Recent Users</p>
 
   <table class="user-table">
@@ -102,4 +96,4 @@
     </tbody>
   </table>
 
-</div><!-- /content-card -->
+</div>

@@ -1,21 +1,16 @@
 <?php
-/* ============================================================
-   admin_dash.php  –  Main dashboard controller
-   Reads ?page= from URL and includes the right content file.
-   ============================================================ */
-
 session_start();
 
-// ── Auth guard: redirect to login if not logged in ──
+// Auth: redirect to login if not logged in
 /*if (!isset($_SESSION['admin'])) {
-    header('Location: Login.php');
+    header('Location: ../login_logout/login.php');
     exit;
 }*/
 
 
-include 'database.php';  
+include '../DB/database.php';  
 
-// Determine which page to show (default: dashboard)
+//(default page is dashboard)
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 $allowed_pages = ['dashboard', 'users', 'analytics', 'settings'];
 if (!in_array($page, $allowed_pages)) {
@@ -29,18 +24,14 @@ if (!in_array($page, $allowed_pages)) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EDM Admin – <?= ucfirst($page) ?></title>
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="admin_style.css"/>
+  <link rel="stylesheet" href="./admin_styles/admin_style.css"/>
 
-  <!-- Google Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
 </head>
 <body>
 
-  <!-- ── SIDEBAR (left navigation) ── -->
   <?php include 'sidebar.php'; ?>
 
-  <!-- ── MAIN CONTENT ── -->
   <main class="main-content">
     <?php
       if ($page === 'dashboard') {
