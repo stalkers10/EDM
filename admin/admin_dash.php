@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 // Auth: redirect to login if not logged in
 /*if (!isset($_SESSION['admin'])) {
     header('Location: ../login_logout/login.php');
@@ -47,6 +45,5 @@ if (!in_array($page, $allowed_pages)) {
       }
     ?>
   </main>
-
 </body>
 </html>

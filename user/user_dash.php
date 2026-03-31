@@ -16,6 +16,7 @@ include('../DB/database.php');
 
 $username = htmlspecialchars($_SESSION['username'] ?? 'User');
 $email    = htmlspecialchars($_SESSION['email']    ?? '');
+$role     = htmlspecialchars($_SESSION['role']     ?? '');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,6 +24,7 @@ $email    = htmlspecialchars($_SESSION['email']    ?? '');
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EDM – User Dashboard</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
   <link rel="stylesheet" href="user_dash.css">
   
 </head>
@@ -62,7 +64,7 @@ $email    = htmlspecialchars($_SESSION['email']    ?? '');
           <div class="card-icon"><span class="material-icons-outlined">person</span></div>
           <div class="card-label">Role</div>
           <div class="card-value" style="font-size:16px; text-transform:capitalize;">
-            <?= htmlspecialchars($_SESSION['role']) ?>
+            <?= htmlspecialchars($role) ?>
           </div>
         </div>
         <div class="card">
