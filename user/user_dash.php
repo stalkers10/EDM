@@ -2,17 +2,15 @@
 
 include('../DB/database.php');
 
-// ── Auth guard: must be logged in ──
-/*if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id'])) {
     header("Location: ../login_logout/Login.php");
     exit();
-}*/
+}
 
-// ── Block admins from user dashboard ──
-/*if ($_SESSION['role'] === 'admin') {
+if ($_SESSION['role'] === 'admin') {
     header("Location: ../admin/admin_dash.php");
     exit();
-}*/
+}
 
 $username = htmlspecialchars($_SESSION['username'] ?? 'User');
 $email    = htmlspecialchars($_SESSION['email']    ?? '');

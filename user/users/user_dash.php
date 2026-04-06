@@ -1,17 +1,12 @@
 <?php
 
-
-// 2. Include database connection
-// Path based on your local XAMPP structure: C:\xampp\htdocs\web\web1\
 include('../../DB/database.php'); 
 
-// 3. Auth guard: Ensure user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login_logout/Login.php");
     exit();
 }
-
-// 4. Set variables for the classical user view
+  
 $username = htmlspecialchars($_SESSION['username'] ?? 'User');
 $email    = htmlspecialchars($_SESSION['email']    ?? 'No email provided');
 $role     = htmlspecialchars($_SESSION['role']     ?? 'User');

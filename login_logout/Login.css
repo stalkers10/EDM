@@ -22,6 +22,9 @@ nav {
     background: rgb(240, 227, 227);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.596);
 }
+nav>div{
+    position: static;
+}
 
 .header-name {
     color: var(--primary-color);

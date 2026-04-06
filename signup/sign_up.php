@@ -137,7 +137,7 @@
                     }
                 }
             } catch (Exception $e) {
-                echo "An unexpected error occurred: " . $e->getMessage();
+                echo "An unexpected error occurred: ". $e->getMessage();
             }
         }
     }

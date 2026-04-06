@@ -1,20 +1,14 @@
 <?php
-/* ============================================================
-   admin_dash.php  –  Main dashboard controller
-   Reads ?page= from URL and includes the right content file.
-   ============================================================ */
 
 session_start();
 
-// ── Auth guard: redirect to login if not logged in ──
-/*if (!isset($_SESSION['admin_id'])) {
+if (!isset($_SESSION['admin_id'])) {
     header('Location: Login.php');
     exit;
-}*/
+}
 
-include 'database.php';  // provides $conn (PDO)
+include 'database.php'; 
 
-// Determine which page to show (default: dashboard)
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 $allowed_pages = ['dashboard', 'users', 'analytics', 'settings'];
 if (!in_array($page, $allowed_pages)) {

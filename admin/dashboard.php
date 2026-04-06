@@ -1,7 +1,7 @@
 
 <div class="topbar">
   <div>
-    <div class="topbar-title">Welcome back 👋</div>
+    <div class="topbar-title">Welcome back, <?php echo $_SESSION['username']; ?></div>
     <div class="topbar-subtitle">Here's what's happening in your system today.</div>
   </div>
 </div>

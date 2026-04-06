@@ -310,9 +310,6 @@ body {
   overflow: hidden;
 }
 
-/* ============================================================
-   SIDEBAR
-   ============================================================ */
 .sidebar {
   width: 240px;
   min-width: 240px;
@@ -370,7 +367,6 @@ body {
   word-break: break-all;
 }
 
-/* "Add User" compose button */
 .btn-compose {
   margin: 4px 16px 20px;
   background: var(--burgundy);
@@ -447,9 +443,6 @@ body {
 .logout-link { color: #e07090 !important; }
 .logout-link:hover { background: rgba(224, 112, 144, 0.12) !important; }
 
-/* ============================================================
-   MAIN CONTENT WRAPPER
-   ============================================================ */
 .main-content {
   flex: 1;
   height: 100vh;
@@ -457,7 +450,6 @@ body {
   padding: 28px;
 }
 
-/* ── TOP BAR ── */
 .topbar {
   display: flex;
   justify-content: space-between;
