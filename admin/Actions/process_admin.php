@@ -1,5 +1,5 @@
 <?php
-include '../DB/database.php';
+include '../../DB/database.php';
 
 // Ensure the session is started and user is an admin
 
@@ -14,7 +14,7 @@ $task = isset($_GET['task']) ? $_GET['task'] : (isset($_POST['task']) ? $_POST['
 $id = isset($_GET['id']) ? intval($_GET['id']) : (isset($_POST['id']) ? intval($_POST['id']) : 0);
 
 if ($id <= 0 && $task !== 'create') {
-    header("Location: admin_dash.php?error=invalid_id");
+    header("Location: ../admin_dash.php?error=invalid_id");
     exit();
 }
 
@@ -24,7 +24,7 @@ switch ($task) {
     case 'toggle':
         $sql = "UPDATE users SET status = 1 - status WHERE id = $id";
         if ($conn->query($sql)) {
-            header("Location: admin_dash.php?page=users");
+            header("Location: ../admin_dash.php?page=users");
         } else {
             die("Error updating status: " . $conn->error);
         }
@@ -35,7 +35,7 @@ switch ($task) {
         $sql = "DELETE FROM users WHERE id = $id";
 
         if ($conn->query($sql)) {
-            header("Location: admin_dash.php?page=users");
+            header("Location: ../admin_dash.php?page=users");
         } else {
             die("Error deleting user: " . $conn->error);
         }
@@ -58,7 +58,7 @@ switch ($task) {
                     WHERE id = $id";
 
             if ($conn->query($sql)) {
-                header("Location: admin_dash.php?page=users");
+                header("Location: ../admin_dash.php?page=users");
             } else {
                 die("Error updating profile: " . $conn->error);
             }
@@ -71,7 +71,7 @@ switch ($task) {
 
         $sql = "UPDATE users SET passwd = '$hashed_pass' WHERE id = $id";
         if ($conn->query($sql)) {
-            header("Location: admin_dash.php?msg=password_reset");
+            header("Location: ../admin_dash.php?msg=password_reset");
         }
         break;
 
@@ -97,7 +97,7 @@ switch ($task) {
                     VALUES ('$email', '$username', '$pass', '$phone', '$role', 1)";
 
                 if ($conn->query($sql)) {
-                    header("Location: admin_dash.php?page=users");
+                    header("Location: ../admin_dash.php?page=users");
                 } else {
                     die("Error creating user: " . $conn->error);
                 }
@@ -105,7 +105,7 @@ switch ($task) {
         }
         break;
     default:
-        header("Location: admin_dash.php");
+        header("Location: ../admin_dash.php");
         break;
 }
 

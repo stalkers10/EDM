@@ -1,4 +1,4 @@
-<?php include '../DB/database.php'; ?>
+<?php include '../../DB/database.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,7 +48,7 @@ if (isset($_GET['error']) && $_GET['error'] == 'exists') {
             </select>
         </div>
         <button type="submit" class="submit-btn">Create Account</button>
-        <a href="admin_dash.php" style="display:block; text-align:center; margin-top:15px; color:#666; text-decoration:none;">Cancel</a>
+        <a href="../admin_dash.php" style="display:block; text-align:center; margin-top:15px; color:#666; text-decoration:none;">Cancel</a>
     </form>
 </div>
 

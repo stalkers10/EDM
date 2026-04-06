@@ -10,7 +10,7 @@ include '../DB/database.php';
 
 //(default page is dashboard)
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
-$allowed_pages = ['dashboard', 'users', 'analytics', 'settings'];
+$allowed_pages = ['dashboard', 'users', 'manage_docs', 'settings'];
 if (!in_array($page, $allowed_pages)) {
     $page = 'dashboard';
 }
@@ -35,10 +35,10 @@ if (!in_array($page, $allowed_pages)) {
       if ($page === 'dashboard') {
           include 'dashboard.php';
       } elseif ($page === 'users') {
-          include 'user_list_include.php';
-      } elseif ($page === 'analytics') {
-          echo '<div class="content-card"><h2 class="welcome-heading">Analytics</h2>
-                <p class="welcome-sub">Coming soon.</p></div>';
+          include 'Manage_users/user_list_include.php';
+      } elseif ($page === 'manage_docs') {
+          echo '<div class="content-card"><h2 class="welcome-heading">Manage Documents</h2>
+                <p class="welcome-sub">Manage all the documents</p></div>';
       } elseif ($page === 'settings') {
           echo '<div class="content-card"><h2 class="welcome-heading">Settings</h2>
                 <p class="welcome-sub">Coming soon.</p></div>';

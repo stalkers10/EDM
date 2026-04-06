@@ -15,7 +15,7 @@
   </div>
 
  
-  <a href="add_user.php" class="btn-compose">
+  <a href="Actions/add_user.php" class="btn-compose">
     <span class="material-icons-outlined">person_add</span>
     Add User
   </a>
@@ -40,10 +40,10 @@
     </li>
 
     <li>
-      <a href="admin_dash.php?page=analytics"
-         class="<?= ($page === 'analytics') ? 'active' : '' ?>">
-        <span class="material-icons-outlined">bar_chart</span>
-        Analytics
+      <a href="admin_dash.php?page=manage_docs"
+         class="<?= ($page === 'manage_docs') ? 'active' : '' ?>">
+        <span class="material-icons-outlined">manage_documents</span>
+        Manage Documents
       </a>
     </li>
 

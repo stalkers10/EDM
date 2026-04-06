@@ -1,95 +1,97 @@
 <?php
 
-include('../DB/database.php');
+include('../../DB/database.php'); 
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login_logout/Login.php");
     exit();
 }
-
-if ($_SESSION['role'] === 'admin') {
-    header("Location: ../admin/admin_dash.php");
-    exit();
-}
-
+  
 $username = htmlspecialchars($_SESSION['username'] ?? 'User');
-$email    = htmlspecialchars($_SESSION['email']    ?? '');
-$role     = htmlspecialchars($_SESSION['role']     ?? '');
+$email    = htmlspecialchars($_SESSION['email']    ?? 'No email provided');
+$role     = htmlspecialchars($_SESSION['role']     ?? 'User');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EDM – User Dashboard</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
-  <link rel="stylesheet" href="user_dash.css">
-  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDM | User Dashboard</title>
+    
+    <link rel="stylesheet" href="user_dash.css">
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <nav class="topnav">
-    <div class="topnav-brand">EDM</div>
-    <div class="topnav-user">
-      <div class="user-info">
-        <div class="user-name"><?= $username ?></div>
-        <div class="user-email"><?= $email ?></div>
-      </div>
-      <div class="avatar"><?= strtoupper(substr($username, 0, 1)) ?></div>
-      <a href="../login_logout/logout.php" class="btn-logout">
-        <span class="material-icons-outlined">logout</span>
-        Logout
-      </a>
+    <div class="sidebar">
+        <div class="brand-name">EDM PLATFORM</div>
+        
+        <div class="user-profile-brief">
+            <span class="u-name"><?= $username ?></span>
+            <span class="u-email"><?= $email ?></span>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="user_dash.php" class="nav-item active">
+                <span class="material-icons-outlined">dashboard</span> Dashboard
+            </a>
+            <a href="Documents.php" class="nav-item">
+                <span class="material-icons-outlined">account_circle</span> Documents
+            </a>
+            <a href="profile.php" class="nav-item">
+                <span class="material-icons-outlined">account_circle</span> Profile
+            </a>
+
+        </nav>
+
+        <a href="../login_logout/logout.php" class="nav-item logout-btn">
+            <span class="material-icons-outlined">logout</span> Logout
+        </a>
     </div>
-  </nav>
 
-  <main class="main">
-    <div class="welcome-card">
-
-      <div class="deco-line"></div>
-
-      <h1 class="greeting">
-        Welcome back,<br><em><?= $username ?></em>
-      </h1>
-
-      <p class="sub">
-        You're logged in to the EDM platform.<br>
-        More features are on their way.
-      </p>
-
-      <div class="cards">
-        <div class="card">
-          <div class="card-icon"><span class="material-icons-outlined">person</span></div>
-          <div class="card-label">Role</div>
-          <div class="card-value" style="font-size:16px; text-transform:capitalize;">
-            <?= htmlspecialchars($role) ?>
-          </div>
+    <main class="content">
+        <div class="welcome-header">
+            <h1>Welcome back, <?= $username ?> 👋</h1>
+            <p>Here’s the current status of your account.</p>
         </div>
-        <div class="card">
-          <div class="card-icon"><span class="material-icons-outlined">verified_user</span></div>
-          <div class="card-label">Status</div>
-          <div class="card-value" style="font-size:16px; color: #6fcf97;">Active</div>
+
+        <div class="management-card">
+            <div class="card-header">
+                <h2>Account Summary</h2>
+            </div>
+            <div class="card-body">
+                <div class="stats-grid">
+                    
+                    <div class="stat-box">
+                        <div class="stat-icon"><span class="material-icons-outlined">verified_user</span></div>
+                        <div class="stat-details">
+                            <span class="label">Account Status</span>
+                            <div class="status-pill">Active</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-box">
+                        <div class="stat-icon"><span class="material-icons-outlined">badge</span></div>
+                        <div class="stat-details">
+                            <span class="label">Your Role</span>
+                            <span class="value"><?= $role ?></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="info-callout">
+                    <p>
+                        <strong>Note:</strong> You are currently in the standard user dashboard. 
+                        If you require elevated permissions or need to modify system settings, 
+                        please contact your administrator.
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="card">
-          <div class="card-icon"><span class="material-icons-outlined">mail_outline</span></div>
-          <div class="card-label">Email</div>
-          <div class="card-value" style="font-size:11px; color: var(--muted); font-weight:400; word-break:break-all;">
-            <?= $email ?>
-          </div>
-        </div>
-      </div>
-
-      <div class="notice">
-        <span class="material-icons-outlined">info</span>
-        <span>This is your personal dashboard. Contact an administrator if you need to update your account details.</span>
-      </div>
-
-    </div>
-  </main>
-
-  <footer>
-    &copy; <?= date('Y') ?> IUSJC EDM Platform. All rights reserved.
-  </footer>
+    </main>
 
 </body>
 </html>

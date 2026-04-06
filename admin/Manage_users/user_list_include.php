@@ -10,7 +10,7 @@
 
   <div class="card-header">
     <h2>Management Panel</h2>
-    <a href="add_user.php" class="btn-add">
+    <a href="./Actions/add_user.php" class="btn-add">
       <span class="material-icons-outlined">add</span>
       Add New User
     </a>
@@ -23,10 +23,7 @@
     <button id="btn-edit" class="btn btn-edit btn-disabled">
       <span class="material-icons-outlined">edit</span> Edit User
     </button>
-    <button id="btn-delete" class="btn btn-delete btn-disabled"
-            onclick="confirmDelete()">
-      <span class="material-icons-outlined">delete</span> Delete
-    </button>
+    
   </div>
 
   <!-- Users Table -->
@@ -53,9 +50,8 @@
               $is_active = ($row['status'] === 'active' || $row['status'] == 1);
       ?>
       <tr data-id="<?= $row['id'] ?>"
-          data-edit-url="edit_user.php?id=<?= $row['id'] ?>"
-          data-toggle-url="process_admin.php?task=toggle&id=<?= $row['id'] ?>"
-          data-delete-url="process_admin.php?task=delete&id=<?= $row['id'] ?>">
+          data-edit-url="./Actions/edit_user.php?id=<?= $row['id'] ?>"
+          data-toggle-url="./Actions/process_admin.php?task=toggle&id=<?= $row['id'] ?>">
 
         <td><?= htmlspecialchars($row['id']) ?></td>
         <td>
@@ -87,7 +83,6 @@
     const tbody     = document.getElementById('user-tbody');
     const btnToggle = document.getElementById('btn-toggle');
     const btnEdit   = document.getElementById('btn-edit');
-    const btnDelete = document.getElementById('btn-delete');
     let   selected  = null;
 
     tbody.addEventListener('click', function (e) {
@@ -107,7 +102,7 @@
     });
 
     function setButtons(on) {
-      [btnToggle, btnEdit, btnDelete].forEach(btn => {
+      [btnToggle, btnEdit].forEach(btn => {
         if (on) btn.classList.remove('btn-disabled');
         else    btn.classList.add('btn-disabled');
       });
@@ -121,11 +116,5 @@
       if (selected) window.location.href = selected.dataset.toggleUrl;
     });
 
-    window.confirmDelete = function () {
-      if (!selected) return;
-      if (confirm('Are you sure you want to delete this user?')) {
-        window.location.href = selected.dataset.deleteUrl;
-      }
-    };
   })();
 </script>

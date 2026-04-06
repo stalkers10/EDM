@@ -1,8 +1,8 @@
 <?php 
-include '../DB/database.php'; 
+include '../../DB/database.php'; 
 
 if (!isset($_GET['id'])) {
-    header("Location: admin_dash.php");
+    header("Location: ../admin_dash.php");
     exit();
 }
 
@@ -20,7 +20,7 @@ if (!$user) {
 <head>
     <meta charset="UTF-8">
     <title>Edit User - <?= htmlspecialchars($user['username']) ?></title>
-    <link rel="stylesheet" href="./admin_styles/admin_style.css">
+    <link rel="stylesheet" href="../admin_styles/admin_style.css">
     <style>
         .edit-form-container {
             max-width: 600px;
@@ -75,7 +75,7 @@ if (!$user) {
         </div>
 
         <button type="submit" class="btn-save">Save Changes</button>
-        <a href="admin_dash.php" class="btn-cancel">Cancel</a>
+        <a href="../admin_dash.php" class="btn-cancel">Cancel</a>
     </form>
 </div>
 
