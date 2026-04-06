@@ -37,8 +37,7 @@ if (!in_array($page, $allowed_pages)) {
       } elseif ($page === 'users') {
           include 'Manage_users/user_list_include.php';
       } elseif ($page === 'manage_docs') {
-          echo '<div class="content-card"><h2 class="welcome-heading">Manage Documents</h2>
-                <p class="welcome-sub">Manage all the documents</p></div>';
+          include 'Manage_docs/manage_docs.php';
       } elseif ($page === 'settings') {
           echo '<div class="content-card"><h2 class="welcome-heading">Settings</h2>
                 <p class="welcome-sub">Coming soon.</p></div>';
