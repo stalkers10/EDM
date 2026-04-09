@@ -235,3 +235,28 @@
         }
 
         .btn-cancel:hover { background: #f5f5f5; }
+        
+        /* 1. Default state (White/Normal) */
+.user-table tbody tr {
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-left 0.1s ease;
+    border-left: 3px solid transparent; /* Keeps the layout stable */
+}
+
+/* 2. Hover state (Subtle color change) */
+.user-table tbody tr:hover {
+    background-color: #f9f9f9; 
+}
+
+/* 3. Selected state (Burgundy bar + Tint) */
+.user-table tbody tr.selected-row {
+    background-color: #fdf2f2 !important; /* The soft burgundy tint from your screenshot */
+    border-left: 3px solid #800020 !important; /* The vertical selection bar */
+}
+
+/* Adjusting the text/icons for the selected row if needed */
+.user-table tbody tr.selected-row td {
+    color: #2c3e50;
+}
+      

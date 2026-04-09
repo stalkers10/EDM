@@ -5,7 +5,6 @@
     exit;
 }*/
 
-
 include '../DB/database.php';  
 
 //(default page is dashboard)

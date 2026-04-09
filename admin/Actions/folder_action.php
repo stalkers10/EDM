@@ -12,9 +12,9 @@ if (isset($_POST['create'])) {
 
     if (mysqli_query($conn, $sql)) {
         // Redirect back to the same folder level
-        $redirect = "manage_docs.php";
+        $redirect = "../admin_dash.php?page=manage_docs";
         if ($parent_id !== "NULL") {
-            $redirect .= "?folder_id=" . $parent_id;
+            $redirect .= "&folder_id=" . $parent_id;
         }
         header("Location: " . $redirect);
     } else {
