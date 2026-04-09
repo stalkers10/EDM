@@ -3,9 +3,12 @@ session_start();
 include('../../DB/database.php');
 
 if (!isset($_SESSION['reset_data'])) {
+    unset($_SESSION['reset_notice']);
     header("Location: forgot_password.php");
     exit();
 }
+
+$reset_notice = $_SESSION['reset_notice'] ?? '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $entered_otp = $_POST['otp'];
@@ -30,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         if (mysqli_stmt_execute($stmt)) {
             unset($_SESSION['reset_data']);
+            unset($_SESSION['reset_notice']);
             echo "<script>alert('Password updated successfully!'); window.location.href='../Login.php';</script>";
         }
         mysqli_stmt_close($stmt);
@@ -48,6 +52,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="body-div">
         <div class="Login-div">
             <p class="Login-pgh">Reset Password</p>
+
+            <?php if (!empty($reset_notice)): ?>
+                <div style="background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border: 1px solid #ffeeba; border-radius: 4px;">
+                    <?= htmlspecialchars($reset_notice) ?>
+                </div>
+                <div style="background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border: 1px solid #ffeeba; border-radius: 4px;">
+                    <strong>TESTING OTP: </strong> <?= htmlspecialchars((string) $_SESSION['reset_data']['otp']) ?>
+                </div>
+            <?php endif; ?>
+
             <form action="reset_password.php" method="post">
                 <div class="login-form">
                     <label>6-Digit Code</label>

@@ -1,5 +1,5 @@
 <?php
-include('../../DB/database.php');
+require_once __DIR__ . '/../../DB/database.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -7,6 +7,14 @@ use PHPMailer\PHPMailer\Exception;
 require '../../mailer/PHPMailer/src/Exception.php';
 require '../../mailer/PHPMailer/src/PHPMailer.php';
 require '../../mailer/PHPMailer/src/SMTP.php';
+
+function isLocalEnvironment(): bool
+{
+    $host = strtolower($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '');
+    $host = explode(':', $host)[0];
+
+    return in_array($host, ['localhost', '127.0.0.1', '::1'], true);
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
@@ -20,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($user) {
         $reset_otp = rand(100000, 999999);
+        unset($_SESSION['reset_notice']);
         $_SESSION['reset_data'] = [
             'user_id' => $user['id'],
             'otp' => $reset_otp,
@@ -44,10 +53,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $mail->Body = "Your password reset code is: <b>$reset_otp</b>. It expires in 5 minutes.";
             
             $mail->send();
+            unset($_SESSION['reset_notice']);
             header("Location: reset_password.php");
             exit();
         } catch (Exception $e) {
-            echo "<script>alert('Error sending email');</script>";
+            if (isLocalEnvironment()) {
+                $_SESSION['reset_notice'] = 'Email delivery is unavailable on this local setup. Use the testing code below to continue resetting your password.';
+                header("Location: reset_password.php");
+                exit();
+            }
+
+            echo "<script>alert('Unable to send the reset code right now. Please check your mail server settings.');</script>";
         }
     } else {
         echo "<script>alert('Email not found in our system');</script>";

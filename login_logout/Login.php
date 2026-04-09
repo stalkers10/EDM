@@ -1,6 +1,6 @@
 <?php
 
-include('../DB/database.php');
+require_once __DIR__ . '/../DB/database.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -8,6 +8,14 @@ use PHPMailer\PHPMailer\Exception;
 require '../mailer/PHPMailer/src/Exception.php';
 require '../mailer/PHPMailer/src/PHPMailer.php';
 require '../mailer/PHPMailer/src/SMTP.php';
+
+function isLocalEnvironment(): bool
+{
+  $host = strtolower($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '');
+  $host = explode(':', $host)[0];
+
+  return in_array($host, ['localhost', '127.0.0.1', '::1'], true);
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -38,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // --- OTP GENERATION ---
     $otp = rand(100000, 999999);
     $expiry = time() + (3 * 60); // 3 minutes
+    unset($_SESSION['otp_notice']);
 
     // Store in temporary session for verification
     $_SESSION['temp_user'] = [
@@ -76,10 +85,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>";
 
       $mail->send();
+      unset($_SESSION['otp_notice']);
       header("Location: otp.php");
       exit();
     } catch (Exception $e) {
-      echo "<script>alert('Mail error: {$mail->ErrorInfo}'); window.location.href='Login.php';</script>";
+      if (isLocalEnvironment()) {
+        $_SESSION['otp_notice'] = 'Email delivery is unavailable on this local setup. Use the testing code below to continue logging in.';
+        header("Location: otp.php");
+        exit();
+      }
+
+      echo "<script>alert('Unable to send the verification code right now. Please check your mail server settings.'); window.location.href='Login.php';</script>";
       exit();
     }
   } else {

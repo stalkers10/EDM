@@ -1,6 +1,6 @@
 <?php
 
-include('../../DB/database.php'); 
+require_once __DIR__ . '/../DB/database.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../login_logout/Login.php");

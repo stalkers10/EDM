@@ -1,11 +1,11 @@
 <?php
-// Auth: redirect to login if not logged in
-/*if (!isset($_SESSION['admin'])) {
-    header('Location: ../login_logout/login.php');
-    exit;
-}*/
+require_once __DIR__ . '/../DB/database.php';
 
-include '../DB/database.php';  
+// Auth: redirect to login if not logged in as an admin
+if (!isset($_SESSION['user_id']) || (($_SESSION['role'] ?? null) !== 'admin')) {
+    header('Location: ../login_logout/Login.php');
+    exit;
+}
 
 //(default page is dashboard)
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';

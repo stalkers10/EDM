@@ -42,7 +42,7 @@
     <li>
       <a href="admin_dash.php?page=manage_docs"
          class="<?= ($page === 'manage_docs') ? 'active' : '' ?>">
-        <span class="material-icons-outlined">manage_documents</span>
+        <span id="docs" class="material-icons-outlined">manage_documents</span>
         Manage Documents
       </a>
     </li>
