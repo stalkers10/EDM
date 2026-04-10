@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to EDM | University Portal</title>
+    <link rel="stylesheet" href="index.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav>
+      <h1 class="header-name">EDM</h1>
+      <img
+        src="assets/stjeanlogo.png"
+        alt="University Logo"
+        class="floating-imag"
+      />
+      <div class="selection-top">
+        <a href="login_logout/login.php"
+          ><button class="login">Login</button></a
+        >
+        <a href="signup/sign_up.php"><button class="signup">Sign up</button></a>
+      </div>
+    </nav>
+
+    <main class="welcome-container">
+      <div class="welcome-text">
+        <h1>Organize & <br />Collaborate</h1>
+        <p>
+          Welcome to the official <strong>EDM Portal</strong>. Your secure
+          gateway to academic archives, department resources, and seamless file
+          sharing across campus.
+        </p>
+        <div class="cta-buttons">
+          <a href="signup/sign_up.php" class="btn-primary">Get Started</a>
+          <a href="#features" class="btn-secondary">Learn More</a>
+        </div>
+      </div>
+
+      <div class="welcome-image-container">
+        <img
+          src="assets/docs1.avif"
+          alt="EDM Interface Preview"
+          class="floating-image"
+        />
+        <div class="image-shadow"></div>
+      </div>
+    </main>
+
+    <section id="features" class="features-section">
+      <div class="feature-card">
+        <span class="material-icons-outlined">security</span>
+        <h3>Secure Storage</h3>
+        <p>
+          Role-based access control keeps your university documents safe and
+          encrypted.
+        </p>
+      </div>
+      <div class="feature-card">
+        <span class="material-icons-outlined">share</span>
+        <h3>Public Sharing</h3>
+        <p>
+          Generate secure, temporary links to share resources with external
+          stakeholders.
+        </p>
+      </div>
+      <div class="feature-card">
+        <span class="material-icons-outlined">folder_copy</span>
+        <h3>Document Archive</h3>
+        <p>
+          Organize university files into structured folders with instant cloud
+          access and version control.
+        </p>
+      </div>
+    </section>
+  </body>
+</html>
