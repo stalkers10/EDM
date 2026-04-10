@@ -1,8 +1,11 @@
 <?php
 session_start();
 
+$otp_notice = $_SESSION['otp_notice'] ?? '';
+
 // If there is no temporary session, kick them back to login
 if (!isset($_SESSION['temp_user'])) {
+    unset($_SESSION['otp_notice']);
     header("Location: Login.php");
     exit();
 }
@@ -13,6 +16,7 @@ $time_remaining = $_SESSION['temp_user']['expiry'] - time();
 // If time is already up before they even submit
 if ($time_remaining <= 0) {
     unset($_SESSION['temp_user']); // Destroy temp session
+    unset($_SESSION['otp_notice']);
     echo "<script>alert('Your OTP has expired. Please log in again.'); window.location.href='Login.php';</script>";
     exit();
 }
@@ -23,6 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if expired again at the moment of submission
     if (time() > $_SESSION['temp_user']['expiry']) {
         unset($_SESSION['temp_user']);
+        unset($_SESSION['otp_notice']);
         echo "<script>alert('OTP expired.'); window.location.href='Login.php';</script>";
         exit();
     }
@@ -37,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Clean up temp session
         unset($_SESSION['temp_user']);
+        unset($_SESSION['otp_notice']);
 
         // Redirect based on role
         if ($_SESSION['role'] === 'admin') {
@@ -147,6 +153,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h2>Verification Required</h2>
         <p>We've sent a 6-digit code to &nbsp;<strong><?= htmlspecialchars($_SESSION['temp_user']['email']) ?></strong>.</p>
 
+        <?php if (!empty($otp_notice)): ?>
+            <div style="background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border: 1px solid #ffeeba; border-radius: 4px;">
+                <?= htmlspecialchars($otp_notice) ?>
+            </div>
+        <?php endif; ?>
+
         <?php if (!empty($error_msg)): ?>
             <div class="error"><?= $error_msg ?></div>
         <?php endif; ?>
@@ -156,9 +168,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="submit">Verify & Login</button>
         </form>
 
-        <div style="background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border: 1px solid #ffeeba; border-radius: 4px;">
-            <strong>TESTING OTP: </strong> <?php echo $_SESSION['temp_user']['otp']; ?>
-        </div>
+        <?php if (!empty($otp_notice)): ?>
+            <div style="background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border: 1px solid #ffeeba; border-radius: 4px;">
+                <strong>TESTING OTP: </strong> <?= htmlspecialchars((string) $_SESSION['temp_user']['otp']) ?>
+            </div>
+        <?php endif; ?>
 
         <div class="timer">Time left: <span id="countdown">03:00</span></div>
     </div>

@@ -166,6 +166,10 @@ body {
 }
 
 .nav-menu li a.active .material-icons-outlined { opacity: 1; }
+#docs{
+  width: 19px;
+  height: 19px;
+}
 
 .nav-separator {
   height: 1px;

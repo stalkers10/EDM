@@ -5,7 +5,10 @@ $db_pass="Ngueguim1";
 $db_name="EDM";
 $port = 3306;
 $conn ="";
-session_start();
+
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
      
 
 try{
