@@ -8,6 +8,15 @@ $sql = "SELECT s.* FROM admin_storage s
 
 $result = mysqli_query($conn, $sql);
 $file = mysqli_fetch_assoc($result);
+
+// If not found in admin_storage, check user_documents
+if (!$file) {
+    $sql = "SELECT s.* FROM user_documents s 
+            JOIN public_shares p ON s.id = p.file_id 
+            WHERE p.share_hash = '$hash' LIMIT 1";
+    $result = mysqli_query($conn, $sql);
+    $file = mysqli_fetch_assoc($result);
+}
 ?>
 
 <!DOCTYPE html>

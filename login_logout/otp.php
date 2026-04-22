@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($_SESSION['role'] === 'admin') {
             header("Location: ../admin/admin_dash.php");
         } else {
-            header("Location: ../user/user_dash.php");
+            header("Location: ../user/Documents.php");
         }
         exit();
     } else {
