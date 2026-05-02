@@ -343,7 +343,7 @@ if (isset($_POST['search'])) {
             }
         }
 
-        // --- Action: Share ---
+        //Action: Share
         function generateShareLink() {
             if (!selectedFileId) {
                 alert("Please select a file first.");

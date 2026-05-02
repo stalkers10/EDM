@@ -17,7 +17,16 @@ $user = $stmt->get_result()->fetch_assoc();
 $username = htmlspecialchars($user['username'] ?? 'User');
 $email    = htmlspecialchars($user['email']    ?? 'No email');
 $phone    = htmlspecialchars($user['phone_num'] ?? '');
-$profile_pic = $user['profile_pic'] ? '../' . $user['profile_pic'] : '../assets/default_avatar.png';
+
+$profile_pic = '../assets/default_avatar.png';
+if (!empty($user['profile_pic'])) {
+    $stored_profile_path = ltrim(str_replace('\\', '/', $user['profile_pic']), '/');
+    $profile_pic_file = dirname(__DIR__) . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $stored_profile_path);
+
+    if (is_file($profile_pic_file)) {
+        $profile_pic = '../' . $stored_profile_path;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -100,20 +109,70 @@ $profile_pic = $user['profile_pic'] ? '../' . $user['profile_pic'] : '../assets/
     </main>
 
     <script>
-        // Preview image
-        document.getElementById('fileInput').onchange = function (evt) {
+        const profileForm = document.getElementById('profileForm');
+        const fileInput = document.getElementById('fileInput');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const alert = document.getElementById('statusAlert');
+
+        function submitProfileUpdate(formData, successMessage) {
+            fetch('Actions/update_profile.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert.className = 'alert alert-success';
+                    alert.textContent = successMessage;
+
+                    if (data.profile_pic_url) {
+                        avatarPreview.src = data.profile_pic_url;
+                    }
+
+                    document.querySelector('.header-info h1').textContent = document.getElementById('username').value;
+                    document.querySelector('.header-info p').textContent = document.getElementById('email').value;
+
+                    const sidebarName = document.querySelector('.u-name');
+                    if (sidebarName) sidebarName.textContent = document.getElementById('username').value;
+
+                    const sidebarEmail = document.querySelector('.u-email');
+                    if (sidebarEmail) sidebarEmail.textContent = document.getElementById('email').value;
+                } else {
+                    alert.className = 'alert alert-error';
+                    alert.textContent = data.message || "An error occurred.";
+                }
+
+                alert.style.display = 'block';
+                window.scrollTo(0, 0);
+            })
+            .catch(() => {
+                alert.className = 'alert alert-error';
+                alert.textContent = "Server error. Please try again.";
+                alert.style.display = 'block';
+            });
+        }
+
+        fileInput.onchange = function () {
             const [file] = this.files;
-            if (file) {
-                document.getElementById('avatarPreview').src = URL.createObjectURL(file);
+            if (!file) {
+                return;
             }
+
+            avatarPreview.src = URL.createObjectURL(file);
+
+            const photoData = new FormData();
+            photoData.append('profile_pic', file);
+            alert.className = 'alert alert-success';
+            alert.textContent = "Uploading profile photo...";
+            alert.style.display = 'block';
+
+            submitProfileUpdate(photoData, "Profile photo updated successfully!");
         };
 
-        // Submit form
-        document.getElementById('profileForm').onsubmit = function(e) {
+        profileForm.onsubmit = function(e) {
             e.preventDefault();
             const formData = new FormData(this);
-            const alert = document.getElementById('statusAlert');
-            
+
             const pass = document.getElementById('password').value;
             const confirm = document.getElementById('confirm_password').value;
             
@@ -124,38 +183,7 @@ $profile_pic = $user['profile_pic'] ? '../' . $user['profile_pic'] : '../assets/
                 return;
             }
 
-            fetch('Actions/update_profile.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    alert.className = 'alert alert-success';
-                    alert.textContent = "Profile updated successfully!";
-                    
-                    // Update header name/email
-                    document.querySelector('.header-info h1').textContent = document.getElementById('username').value;
-                    document.querySelector('.header-info p').textContent = document.getElementById('email').value;
-                    
-                    // Update sidebar name
-                    const sidebarName = document.querySelector('.u-name');
-                    if (sidebarName) sidebarName.textContent = document.getElementById('username').value;
-                    
-                    const sidebarEmail = document.querySelector('.u-email');
-                    if (sidebarEmail) sidebarEmail.textContent = document.getElementById('email').value;
-                } else {
-                    alert.className = 'alert alert-error';
-                    alert.textContent = data.message || "An error occurred.";
-                }
-                alert.style.display = 'block';
-                window.scrollTo(0, 0);
-            })
-            .catch(err => {
-                alert.className = 'alert alert-error';
-                alert.textContent = "Server error. Please try again.";
-                alert.style.display = 'block';
-            });
+            submitProfileUpdate(formData, "Profile updated successfully!");
         };
     </script>
 </body>

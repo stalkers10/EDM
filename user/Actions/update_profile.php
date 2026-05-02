@@ -2,6 +2,8 @@
 session_start();
 include '../../DB/database.php';
 
+header('Content-Type: application/json');
+
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit();
@@ -11,13 +13,28 @@ $user_id = $_SESSION['user_id'];
 $response = ['success' => false, 'message' => ''];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $new_username = mysqli_real_escape_string($conn, trim($_POST['username']));
-    $new_email    = mysqli_real_escape_string($conn, trim($_POST['email']));
-    $new_phone    = mysqli_real_escape_string($conn, trim($_POST['phone']));
-    $new_password = $_POST['password'];
+    $current_stmt = $conn->prepare("SELECT username, email, phone_num FROM users WHERE id = ?");
+    $current_stmt->bind_param("i", $user_id);
+    $current_stmt->execute();
+    $current_user = $current_stmt->get_result()->fetch_assoc();
+
+    if (!$current_user) {
+        $response['message'] = 'User not found.';
+        echo json_encode($response);
+        exit();
+    }
+
+    $posted_username = isset($_POST['username']) ? trim($_POST['username']) : $current_user['username'];
+    $posted_email    = isset($_POST['email']) ? trim($_POST['email']) : $current_user['email'];
+    $posted_phone    = isset($_POST['phone']) ? trim($_POST['phone']) : ($current_user['phone_num'] ?? '');
+    $new_password    = $_POST['password'] ?? '';
+
+    $new_username = mysqli_real_escape_string($conn, $posted_username);
+    $new_email    = mysqli_real_escape_string($conn, $posted_email);
+    $new_phone    = mysqli_real_escape_string($conn, $posted_phone);
 
     // 1. Basic Validation
-    if (empty($new_username) || empty($new_email)) {
+    if ($posted_username === '' || $posted_email === '') {
         echo json_encode(['success' => false, 'message' => 'Username and Email are required.']);
         exit();
     }
@@ -32,25 +49,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 3. Handle Profile Picture Upload
     $profile_pic_path = null;
-    if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] === 0) {
+    if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] !== UPLOAD_ERR_NO_FILE) {
         $file = $_FILES['profile_pic'];
-        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $allowed = ['jpg', 'jpeg', 'png', 'gif'];
-
-        if (in_array($ext, $allowed)) {
-            $newName = "profile_" . $user_id . "_" . time() . "." . $ext;
-            $uploadPath = "../../uploads/profiles/" . $newName;
-            $dbPath = "uploads/profiles/" . $newName;
-
-            // Ensure directory exists
-            if (!is_dir('../../uploads/profiles/')) {
-                mkdir('../../uploads/profiles/', 0777, true);
-            }
-
-            if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
-                $profile_pic_path = $dbPath;
-            }
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            $response['message'] = 'Image upload failed. Please try again.';
+            echo json_encode($response);
+            exit();
         }
+
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+        if (!in_array($ext, $allowed, true) || getimagesize($file['tmp_name']) === false) {
+            $response['message'] = 'Please upload a valid image file (JPG, PNG, GIF, or WEBP).';
+            echo json_encode($response);
+            exit();
+        }
+
+        $newName = "profile_" . $user_id . "_" . time() . "." . $ext;
+        $project_root = dirname(__DIR__, 2);
+        $upload_dir = $project_root . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'profiles';
+        $upload_path = $upload_dir . DIRECTORY_SEPARATOR . $newName;
+        $dbPath = "uploads/profiles/" . $newName;
+
+        if (!is_dir($upload_dir) && !mkdir($upload_dir, 0777, true)) {
+            $response['message'] = 'Could not create the profile image folder.';
+            echo json_encode($response);
+            exit();
+        }
+
+        if (!move_uploaded_file($file['tmp_name'], $upload_path)) {
+            $response['message'] = 'Could not save the uploaded profile image.';
+            echo json_encode($response);
+            exit();
+        }
+
+        $profile_pic_path = $dbPath;
     }
 
     // 4. Build Update Query
@@ -77,6 +111,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['email'] = $new_email;
         
         $response['success'] = true;
+        if ($profile_pic_path) {
+            $response['profile_pic_url'] = '../' . $profile_pic_path . '?v=' . time();
+        }
     } else {
         $response['message'] = "Database Error: " . mysqli_error($conn);
     }
