@@ -5,16 +5,35 @@ require_once __DIR__ . '/../DB/database.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../mailer/PHPMailer/src/Exception.php';
-require '../mailer/PHPMailer/src/PHPMailer.php';
-require '../mailer/PHPMailer/src/SMTP.php';
-
 function isLocalEnvironment(): bool
 {
   $host = strtolower($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '');
   $host = explode(':', $host)[0];
 
   return in_array($host, ['localhost', '127.0.0.1', '::1'], true);
+}
+
+function loadMailerDependencies(): bool
+{
+  static $loaded = false;
+
+  if ($loaded) {
+    return true;
+  }
+
+  $mailerBase = dirname(__DIR__) . '/mailer/PHPMailer/src/';
+  $requiredFiles = ['Exception.php', 'PHPMailer.php', 'SMTP.php'];
+
+  foreach ($requiredFiles as $file) {
+    $path = $mailerBase . $file;
+    if (!is_file($path)) {
+      return false;
+    }
+    require_once $path;
+  }
+
+  $loaded = true;
+  return true;
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -58,6 +77,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       'expiry'   => $expiry
     ];
 
+    if (!loadMailerDependencies()) {
+      if (isLocalEnvironment()) {
+        $_SESSION['otp_notice'] = 'Email delivery is unavailable on this local setup. Use the testing code below to continue logging in.';
+        header("Location: otp.php");
+        exit();
+      }
+
+      echo "<script>alert('The login email service is not configured correctly on the server. Please verify the PHPMailer files were uploaded.'); window.location.href='Login.php';</script>";
+      exit();
+    }
+
     // --- SENDING EMAIL VIA PHPMAILER ---
     $mail = new PHPMailer(true);
 
@@ -70,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
       $mail->Port       = 587;
 
-      $mail->setFrom('security@edm-platform.com', 'EDM Security');
+      $mail->setFrom('sobfred30@gmail.com', 'EDM Security');
       $mail->addAddress($user['email']);
 
       $mail->isHTML(true);
@@ -89,6 +119,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       header("Location: otp.php");
       exit();
     } catch (Exception $e) {
+      error_log('EDM login OTP mail failed: ' . $e->getMessage());
+
       if (isLocalEnvironment()) {
         $_SESSION['otp_notice'] = 'Email delivery is unavailable on this local setup. Use the testing code below to continue logging in.';
         header("Location: otp.php");

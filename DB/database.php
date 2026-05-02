@@ -1,8 +1,8 @@
 <?php 
-$db_server="localhost";
-$db_user= "sobfred";
+$db_server="sql208.infinityfree.com";
+$db_user= "if0_41812042";
 $db_pass="Ngueguim1";
-$db_name="EDM";
+$db_name="if0_41812042_edm";
 $port = 3306;
 $conn ="";
 
