@@ -112,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - EDM</title>
-  <link rel="stylesheet" href="Login.css">
+  <link rel="stylesheet" href="Login.css?v=<?= filemtime(__DIR__ . '/Login.css') ?>">
 </head>
 
 <body>
@@ -139,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <a href="forgot_password/forgot-password.php" style="color: var(--burgundy); font-size: 13px; text-decoration: none; display: block; margin: 10px 0;">Forgot Password?</a>
 
           <p>Don't have an account yet?</p>
-          <a href="../signup/sign_up.php"><button type="button">Sign up</button></a>
+          <a href="../signup/sign_up.php" class="secondary-link-btn">Sign up</a>
         </div>
       </div>
     </form>

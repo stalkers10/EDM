@@ -36,7 +36,7 @@ if (!empty($user['profile_pic'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile | EDM</title>
-    <link rel="stylesheet" href="user_style.css">
+    <link rel="stylesheet" href="user_style.css?v=<?= filemtime(__DIR__ . '/user_style.css') ?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
 </head>
 

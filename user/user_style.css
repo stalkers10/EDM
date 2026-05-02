@@ -638,6 +638,11 @@ body.sidebar-open .sidebar-overlay {
 }
 
 @media (max-width: 760px) {
+  .sidebar {
+    width: 100vw;
+    max-width: 100vw;
+  }
+
   .main-content {
     padding: 14px;
   }
@@ -763,6 +768,11 @@ body.sidebar-open .sidebar-overlay {
 }
 
 @media (max-width: 480px) {
+  .sidebar {
+    width: 100vw;
+    max-width: 100vw;
+  }
+
   .brand-section {
     padding: 22px 16px;
   }

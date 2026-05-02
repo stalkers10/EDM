@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up - EDM</title>
-    <link rel="stylesheet" href="../login_logout/Login.css">
+    <link rel="stylesheet" href="../login_logout/Login.css?v=<?= filemtime(__DIR__ . '/../login_logout/Login.css') ?>">
     <style>
         #role {
             width: 100%;
@@ -67,7 +67,7 @@
 
                     <p>Aready have an account?</p>
 
-                    <a href="../login_logout/Login.php"><button type="button">Login</button></a>
+                    <a href="../login_logout/Login.php" class="secondary-link-btn">Login</a>
 
                 </div>
             </div>

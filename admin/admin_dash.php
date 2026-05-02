@@ -19,9 +19,9 @@ if (!in_array($page, $allowed_pages, true)) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EDM Admin - <?= ucfirst($page) ?></title>
 
-  <link rel="stylesheet" href="./admin_styles/admin_style.css"/>
+  <link rel="stylesheet" href="./admin_styles/admin_style.css?v=<?= filemtime(__DIR__ . '/admin_styles/admin_style.css') ?>"/>
   <?php if ($page === 'manage_docs'): ?>
-    <link rel="stylesheet" href="./Manage_docs/manage_docs.css"/>
+    <link rel="stylesheet" href="./Manage_docs/manage_docs.css?v=<?= filemtime(__DIR__ . '/Manage_docs/manage_docs.css') ?>"/>
   <?php endif; ?>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
 </head>

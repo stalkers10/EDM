@@ -1,8 +1,15 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
+/* ============================================================
+   THE KEY FIX: without this, inputs with width:100% + padding
+   overflow their container, causing horizontal scroll & cutoff
+   ============================================================ */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 :root {
-    --primary-color: rgb(112, 16, 72); 
+    --primary-color: rgb(112, 16, 72);
     --primary-hover: rgb(80, 10, 50);
     --bg-light: #f4f7f6;
 }
@@ -12,277 +19,321 @@ body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--bg-light);
     min-height: 100vh;
-    overflow-x: hidden;
+    overflow-x: hidden; /* prevent horizontal scroll */
+    width: 100%;
 }
 
+/* ── Navigation ── */
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    padding: 1rem 5%; 
+    flex-wrap: wrap; /* allow items to wrap on small screens */
+    padding: 1rem 5%;
     background: rgb(240, 227, 227);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.596);
 }
-nav>div{
+
+nav > div {
     position: static;
 }
 
 .header-name {
     color: var(--primary-color);
-    font-size: 1.8rem;
+    font-size: clamp(1.2rem, 4vw, 1.8rem); /* fluid font size */
     margin: 0;
 }
 
 .selection-top {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
+.selection-top button {
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    min-width: 90px;
+}
+
+/* ── Page body layout ── */
 .body-div {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
-    padding: 24px 15px;
+    padding: 24px 16px;
+    min-height: calc(100vh - 72px);
 }
 
+.body-div > form {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* ── Login card ── */
 .Login-div {
     background: rgb(241, 238, 238);
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.384);
-    
-    width: min(100%, 500px);
-    max-width: 600px;
-    box-sizing: border-box;
+    width: 100%;
+    max-width: 500px;
+    overflow: hidden;
 }
 
 .Login-pgh {
-    font-size: 35px;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
     font-weight: bold;
     color: var(--primary-color);
     text-align: center;
-    margin-bottom: 30px;
+    margin: 0 0 28px;
 }
 
+/* ── Form ── */
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 14px;
 }
 
 label {
-    font-size: 20px;
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
     font-style: oblique;
     color: #000000;
-    margin-bottom: -10px; 
+    display: block;
+    margin-bottom: 4px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+/* ── Inputs — width:100% is safe now because of box-sizing ── */
 input {
     width: 100%;
-    padding: 12px;
+    padding: 12px 14px;
     border: 1.5px solid #ddd;
     border-radius: 10px;
-    font-size: 20px;    
-    transition: border-color 0.3s;
-    transform: translateY(3px);
-    
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background: #fff;
+    font-family: inherit;
 }
 
 input:focus {
     border-color: var(--primary-color);
     outline: none;
-    border-radius: 15px;
+    border-radius: 12px;
     box-shadow: 0 0 0 3px rgba(112, 16, 72, 0.1);
-    transition-duration:0.5s;
-
 }
 
-#btn-Login, #btnSignUp, #btnLogout {
+/* ── Primary buttons ── */
+#btn-Login,
+#btnSignUp,
+#btnLogout {
     width: 100%;
-    max-width: 240px;
-    padding: 14px;
+    max-width: 280px;
+    padding: 13px;
     background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 20px;
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     margin: 20px auto 0;
-    transition: all ease-in-out 0.5s;
+    transition: background-color 0.3s, transform 0.3s;
     display: block;
 }
 
-#btn-Login:hover, #btnSignUp:hover, #btnLogout:hover {
+#btn-Login:hover,
+#btnSignUp:hover,
+#btnLogout:hover {
     background-color: var(--primary-hover);
-    transform: translateY(-5px);
-    font-size: 18px;
+    transform: translateY(-3px);
 }
 
+/* ── Secondary / bottom links ── */
 .selection-btm {
-    margin-top: 25px;
+    margin-top: 22px;
     text-align: center;
     font-size: 14px;
     color: #292323;
 }
 
 .selection-btm button {
+    text-align: center;
+    text-decoration: none;
+}
+
+.selection-btm button,
+.selection-btm .secondary-link-btn {
     background: rgba(236, 99, 179, 0.26);
     width: 100%;
-    max-width: 240px;
-    padding: 14px;
+    max-width: 280px;
+    padding: 13px;
     border: none;
     border-radius: 10px;
-    font-size: 16px;
+    font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    margin: 20px auto 0;
+    margin: 16px auto 0;
     color: var(--primary-color);
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: underline;
-    text-decoration: none;
-    transition: all ease-in-out 0.3s;
+    transition: transform 0.2s;
     display: block;
+    font-family: inherit;
+    text-decoration: none;
 }
-.selection-btm button:hover{
-    transition-duration: 0.2s;
-    transform: translateY(3px); 
+
+.selection-btm button:hover,
+.selection-btm .secondary-link-btn:hover {
+    transform: translateY(2px);
 }
-#signup{
+
+/* Sign-up specific button */
+#signup {
     width: 100%;
-    max-width: 240px;
-    padding: 14px;
+    max-width: 280px;
+    padding: 13px;
     background-color: var(--primary-color);
     color: white;
     border: none;
-    border-radius: 6px;
-    font-size: 18px;
+    border-radius: 8px;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     margin: 20px auto 0;
-    transition: all ease-in-out 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
     display: block;
-}
-.form-group{
-    display: flex;
-    flex-direction: column-reverse;
+    font-family: inherit;
 }
 
+#signup:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+/* ── Form group (used in sign-up for label+input stacking) ── */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* ── Role dropdown ── */
 #role {
     width: 100%;
-    padding: 12px;
+    padding: 12px 36px 12px 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #ffffff;
     color: #333;
-    font-size: 14px;
+    font-size: clamp(0.9rem, 2.5vw, 1rem);
     font-family: inherit;
     cursor: pointer;
-    appearance: none; /* Removes default browser arrow */
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="%23803060" d="M5 7l5 5 5-5z"/></svg>'); 
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="%23803060" d="M5 7l5 5 5-5z"/></svg>');
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 15px;
     transition: border-color 0.3s ease;
 }
 
-/* Focus State */
 #role:focus {
     outline: none;
-    border-color: #803060; 
+    border-color: #803060;
     box-shadow: 0 0 5px rgba(128, 48, 96, 0.2);
-}
-
-#role option {
-    padding: 10px;
-    background-color: #ffffff;
-    color: #333;
-}
-
-#role option:hover,
-#role option:focus,
-#role option:active {
-    background-color: #f2d7e5 !important;
-    color: #803060 !important;
 }
 
 form {
     width: 100%;
 }
 
+/* ── Tablet (≤ 768px) ── */
 @media (max-width: 768px) {
     nav {
         flex-direction: column;
+        align-items: center;
         text-align: center;
-        padding-inline: 20px;
+        padding: 14px 20px;
+        gap: 10px;
     }
 
-    .header-name {
-        font-size: 1.45rem;
+    .selection-top {
+        justify-content: center;
     }
 
     .body-div {
-        padding: 20px 12px 28px;
-        align-items: flex-start;
+        padding: 20px 14px 30px;
     }
 
     .Login-div {
-        padding: 28px 22px;
+        padding: 28px 24px;
         border-radius: 16px;
     }
 
-    .Login-pgh {
-        font-size: 2rem;
-        margin-bottom: 24px;
-    }
-
-    label {
-        font-size: 1rem;
-        margin-bottom: -4px;
-    }
-
-    input,
-    #role {
-        font-size: 1rem;
-    }
-
-    .selection-btm button,
-    #btn-Login,
-    #btnSignUp,
-    #btnLogout,
-    #signup {
-        max-width: none;
-    }
-}
-
-@media (max-width: 480px) {
-    .Login-div {
-        padding: 22px 16px;
-    }
-
-    .Login-pgh {
-        font-size: 1.7rem;
-    }
-
-    .login-form {
-        gap: 12px;
-    }
-
-    input,
-    #role,
     #btn-Login,
     #btnSignUp,
     #btnLogout,
     #signup,
-    .selection-btm button {
-        font-size: 0.95rem;
+    .selection-btm button,
+    .selection-btm .secondary-link-btn {
+        max-width: none; /* full width on mobile */
     }
 }
 
+/* ── Mobile (≤ 480px) ── */
+@media (max-width: 480px) {
+    nav {
+        padding: 12px 14px;
+    }
 
+    .selection-top {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .selection-top button {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .body-div {
+        padding: 16px 12px 24px;
+    }
+
+    .Login-div {
+        padding: 22px 16px;
+        border-radius: 14px;
+    }
+
+    .Login-pgh {
+        margin-bottom: 20px;
+    }
+
+    .login-form {
+        gap: 10px;
+    }
+
+    input,
+    #role {
+        padding: 11px 12px;
+    }
+}
+
+/* ── Very small screens (≤ 360px) ── */
+@media (max-width: 360px) {
+    .Login-div {
+        padding: 18px 14px;
+    }
+
+    .header-name {
+        font-size: 1.1rem;
+    }
+}
