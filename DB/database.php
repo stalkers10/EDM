@@ -1,7 +1,7 @@
 <?php 
 $db_server="localhost";
-$db_user= "sobfred";
-$db_pass="Ngueguim1";
+$db_user= "root";
+$db_pass="";
 $db_name="EDM";
 $port = 3306;
 $conn ="";
