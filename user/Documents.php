@@ -43,8 +43,18 @@ if (isset($_POST['search'])) {
 <body>
 
     <?php include 'sidebar.php'; ?>
+    <div class="sidebar-overlay" data-sidebar-overlay></div>
 
     <main class="main-content">
+        <div class="mobile-toolbar">
+            <button type="button" class="menu-toggle" data-sidebar-toggle aria-label="Open navigation menu">
+                <span class="material-icons-outlined">menu</span>
+            </button>
+            <div class="mobile-toolbar-copy">
+                <div class="mobile-toolbar-title">EDM Platform</div>
+                <div class="mobile-toolbar-subtitle">University resources</div>
+            </div>
+        </div>
         <div class="content-card">
 
             <h2 class="welcome-heading">University Resources</h2>
@@ -107,7 +117,7 @@ if (isset($_POST['search'])) {
             </div>
 
             <!-- Table -->
-            <div style="overflow-x: auto;">
+            <div class="table-shell">
                 <table class="user-table">
                     <thead>
                         <tr>
@@ -131,8 +141,8 @@ if (isset($_POST['search'])) {
                         if (mysqli_num_rows($result) === 0):
                         ?>
                             <tr>
-                                <td colspan="3">
-                                    <div class="empty-state" style="text-align: center; padding: 50px 0; color: var(--text-light);">
+                                <td colspan="3" class="table-message-cell">
+                                    <div class="empty-state">
                                         <span class="material-icons-outlined" style="font-size: 48px; opacity: 0.2; margin-bottom: 10px;">folder_open</span>
                                         <p><?= $search ? 'No results found for "' . htmlspecialchars($search) . '".' : 'This folder is empty.' ?></p>
                                     </div>
@@ -140,7 +150,7 @@ if (isset($_POST['search'])) {
                             </tr>
                         <?php else: while ($row = mysqli_fetch_assoc($result)): ?>
                             <tr data-id="<?= $row['id'] ?>" onclick="selectRow(this, '<?= $row['type'] ?>', '<?= isset($row['file_path']) ? '../' . $row['file_path'] : '' ?>')">
-                                <td>
+                                <td data-label="Name">
                                     <div class="item-name">
                                         <?php if ($row['type'] == 'folder'): ?>
                                             <span class="material-icons-outlined icon-folder">folder</span>
@@ -155,12 +165,12 @@ if (isset($_POST['search'])) {
                                         <?php endif; ?>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-label="Type">
                                     <span style="font-size: 12px; color: var(--text-light); text-transform: capitalize; background: #f0f0f0; padding: 2px 8px; border-radius: 4px;">
                                         <?= $row['type'] ?>
                                     </span>
                                 </td>
-                                <td style="color: var(--text-light); font-size: 13px;">
+                                <td data-label="Date Added" style="color: var(--text-light); font-size: 13px;">
                                     <?= date('d M Y', strtotime($row['created_at'])) ?>
                                 </td>
                             </tr>
@@ -200,6 +210,41 @@ if (isset($_POST['search'])) {
                 document.body.removeChild(link);
             }
         }
+
+        (function () {
+            const body = document.body;
+            const toggleButtons = document.querySelectorAll('[data-sidebar-toggle]');
+            const overlay = document.querySelector('[data-sidebar-overlay]');
+            const navLinks = document.querySelectorAll('.sidebar a');
+
+            function setSidebar(open) {
+                body.classList.toggle('sidebar-open', open);
+            }
+
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    setSidebar(!body.classList.contains('sidebar-open'));
+                });
+            });
+
+            if (overlay) {
+                overlay.addEventListener('click', () => setSidebar(false));
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 1024) {
+                        setSidebar(false);
+                    }
+                });
+            });
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 1024) {
+                    setSidebar(false);
+                }
+            });
+        })();
     </script>
 </body>
 </html>

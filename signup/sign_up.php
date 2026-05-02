@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="../login_logout/Login.css">
     <style>
         #role {
-            width: 55%;
-            padding: 6px;
+            width: 100%;
+            padding: 12px;
             border: 1px solid #ddd;
-            border-radius: 7px;
+            border-radius: 8px;
             background-color: #f4f7f6;
-            font-size: 18px;
+            font-size: 1rem;
         }
     </style>
 </head>

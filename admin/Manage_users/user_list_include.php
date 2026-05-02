@@ -27,54 +27,55 @@
   </div>
 
   <!-- Users Table -->
-  <table class="user-table" id="user-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>User Details</th>
-        <th>Phone</th>
-        <th>Role</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody id="user-tbody">
+  <div class="table-shell">
+    <table class="user-table" id="user-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User Details</th>
+          <th>Phone</th>
+          <th>Role</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="user-tbody">
 
-      <?php
-        $result = mysqli_query($conn, "SELECT * FROM users ORDER BY id DESC");
+        <?php
+          $result = mysqli_query($conn, "SELECT * FROM users ORDER BY id DESC");
 
-        if (!$result) {
-            echo "<tr><td colspan='5'>Error loading users: " . mysqli_error($conn) . "</td></tr>";
-        } else {
-            while ($row = mysqli_fetch_assoc($result)):
-              // Normalize status: works whether DB stores 'active'/'inactive' OR 1/0
-              $is_active = ($row['status'] === 'active' || $row['status'] == 1);
-      ?>
-      <tr data-id="<?= $row['id'] ?>"
-          data-edit-url="./Actions/edit_user.php?id=<?= $row['id'] ?>"
-          data-toggle-url="./Actions/process_admin.php?task=toggle&id=<?= $row['id'] ?>">
+          if (!$result) {
+              echo "<tr><td class='table-message-cell' colspan='5'>Error loading users: " . mysqli_error($conn) . "</td></tr>";
+          } else {
+              while ($row = mysqli_fetch_assoc($result)):
+                $is_active = ($row['status'] === 'active' || $row['status'] == 1);
+        ?>
+        <tr data-id="<?= $row['id'] ?>"
+            data-edit-url="./Actions/edit_user.php?id=<?= $row['id'] ?>"
+            data-toggle-url="./Actions/process_admin.php?task=toggle&id=<?= $row['id'] ?>">
 
-        <td><?= htmlspecialchars($row['id']) ?></td>
-        <td>
-          <div class="user-name"><?= htmlspecialchars($row['username']) ?></div>
-          <div class="user-email"><?= htmlspecialchars($row['email']) ?></div>
-        </td>
-        <td><?= htmlspecialchars($row['phone_num']) ?></td>
-        <td><span class="role-badge"><?= htmlspecialchars($row['role']) ?></span></td>
-        <td>
-          <span class="status-pill <?= $is_active ? 'active' : 'inactive' ?>">
-            <?= $is_active ? 'Active' : 'Inactive' ?>
-          </span>
-        </td>
+          <td data-label="ID"><?= htmlspecialchars($row['id']) ?></td>
+          <td data-label="User Details">
+            <div class="user-name"><?= htmlspecialchars($row['username']) ?></div>
+            <div class="user-email"><?= htmlspecialchars($row['email']) ?></div>
+          </td>
+          <td data-label="Phone"><?= htmlspecialchars($row['phone_num']) ?></td>
+          <td data-label="Role"><span class="role-badge"><?= htmlspecialchars($row['role']) ?></span></td>
+          <td data-label="Status">
+            <span class="status-pill <?= $is_active ? 'active' : 'inactive' ?>">
+              <?= $is_active ? 'Active' : 'Inactive' ?>
+            </span>
+          </td>
 
-      </tr>
-      <?php
-            endwhile;
-            mysqli_free_result($result);
-        }
-      ?>
+        </tr>
+        <?php
+              endwhile;
+              mysqli_free_result($result);
+          }
+        ?>
 
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 
 </div>
 

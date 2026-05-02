@@ -3,7 +3,12 @@
 <nav class="sidebar">
 
   <div class="brand">
-    <div class="brand-name">EDM ADMIN</div>
+    <div class="brand-top">
+      <div class="brand-name">EDM ADMIN</div>
+      <button type="button" class="sidebar-close" data-sidebar-toggle aria-label="Close navigation menu">
+        <span class="material-icons-outlined">close</span>
+      </button>
+    </div>
     <div class="brand-username">
       <span class="material-icons-outlined" style="font-size:15px; vertical-align:middle;">account_circle</span>
       <?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?>

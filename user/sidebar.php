@@ -1,6 +1,11 @@
 <div class="sidebar">
     <div class="brand-section">
-        <div class="brand-name">EDM PLATFORM</div>
+        <div class="brand-top">
+            <div class="brand-name">EDM PLATFORM</div>
+            <button type="button" class="sidebar-close" data-sidebar-toggle aria-label="Close navigation menu">
+                <span class="material-icons-outlined">close</span>
+            </button>
+        </div>
         <div class="user-profile-brief">
             <span class="u-name"><?= $username ?></span>
             <span class="u-email"><?= $email ?></span>

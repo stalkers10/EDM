@@ -19,12 +19,14 @@ if (!$user) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit User - <?= htmlspecialchars($user['username']) ?></title>
     <link rel="stylesheet" href="../admin_styles/admin_style.css">
     <style>
+        body { padding: 20px; }
         .edit-form-container {
-            max-width: 600px;
-            margin: 50px auto;
+            width: min(100%, 600px);
+            margin: 24px auto;
             background: #fff;
             padding: 30px;
             border-radius: 8px;
@@ -38,8 +40,13 @@ if (!$user) {
             border: 1px solid #ddd;
             border-radius: 4px;
         }
-        .btn-save { background: #800020; color: white; border: none; width: 30%; padding: 10px; cursor: pointer; font-size: 16px; margin-top: 10px; border-radius: 5px; }
+        .btn-save { background: #800020; color: white; border: none; width: 100%; max-width: 220px; padding: 10px; cursor: pointer; font-size: 16px; margin-top: 10px; border-radius: 5px; }
         .btn-cancel { display: block; text-align: center; margin-top: 15px; color: #800020; text-decoration: none; }
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            .edit-form-container { padding: 22px 16px; }
+            .btn-save { max-width: none; }
+        }
     </style>
 </head>
 <body>

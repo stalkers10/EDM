@@ -78,8 +78,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 16px;
         }
 
         .otp-container {
@@ -143,6 +144,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: red;
             font-size: 13px;
             margin-bottom: 15px;
+        }
+
+        @media (max-width: 480px) {
+            .otp-container {
+                padding: 24px 18px;
+                border-radius: 14px;
+            }
+
+            input[type="text"] {
+                font-size: 16px;
+                letter-spacing: 3px;
+            }
         }
     </style>
 </head>

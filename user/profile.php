@@ -43,8 +43,18 @@ if (!empty($user['profile_pic'])) {
 <body>
 
     <?php include 'sidebar.php'; ?>
+    <div class="sidebar-overlay" data-sidebar-overlay></div>
 
     <main class="main-content">
+        <div class="mobile-toolbar">
+            <button type="button" class="menu-toggle" data-sidebar-toggle aria-label="Open navigation menu">
+                <span class="material-icons-outlined">menu</span>
+            </button>
+            <div class="mobile-toolbar-copy">
+                <div class="mobile-toolbar-title">EDM Platform</div>
+                <div class="mobile-toolbar-subtitle">My profile</div>
+            </div>
+        </div>
         <div class="content-card profile-card">
 
             <div class="profile-header">
@@ -97,7 +107,7 @@ if (!empty($user['profile_pic'])) {
                     </div>
                 </div>
 
-                <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                <div class="form-actions">
                     <button type="submit" class="submit-btn">
                         <span class="material-icons-outlined">save</span>
                         <span>Save Changes</span>
@@ -185,6 +195,41 @@ if (!empty($user['profile_pic'])) {
 
             submitProfileUpdate(formData, "Profile updated successfully!");
         };
+
+        (function () {
+            const body = document.body;
+            const toggleButtons = document.querySelectorAll('[data-sidebar-toggle]');
+            const overlay = document.querySelector('[data-sidebar-overlay]');
+            const navLinks = document.querySelectorAll('.sidebar a');
+
+            function setSidebar(open) {
+                body.classList.toggle('sidebar-open', open);
+            }
+
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    setSidebar(!body.classList.contains('sidebar-open'));
+                });
+            });
+
+            if (overlay) {
+                overlay.addEventListener('click', () => setSidebar(false));
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 1024) {
+                        setSidebar(false);
+                    }
+                });
+            });
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 1024) {
+                    setSidebar(false);
+                }
+            });
+        })();
     </script>
 </body>
 

@@ -23,22 +23,36 @@ if (!$file) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shared Resource | EDM</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
    
     <style>
         .share-container { 
             display: flex; flex-direction: column; align-items: center; 
-            justify-content: center; height: 100vh; background: #f4f4f4; 
+            justify-content: center; min-height: 100vh; background: #f4f4f4; 
+            padding: 16px;
         }
         .share-card { 
             background: #fff; padding: 40px; border-radius: 12px; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center;
             border-top: 5px solid #800020; /* Your Burgundy */
+            width: min(100%, 520px);
         }
         .btn-download {
             background: #800020; color: white; padding: 12px 25px;
             border-radius: 6px; text-decoration: none; display: inline-block;
             margin-top: 20px; font-weight: bold;
+        }
+        @media (max-width: 480px) {
+            .share-card {
+                padding: 24px 18px;
+            }
+
+            .btn-download {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
