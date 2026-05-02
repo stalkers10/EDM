@@ -65,35 +65,37 @@
   <!-- RECENT USERS up to 5--> 
   <p class="recent-label">Recent Users</p>
 
-  <table class="user-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>User Details</th>
-        <th>Role</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php
-        $recent = mysqli_query($conn, "SELECT * FROM users ORDER BY id DESC LIMIT 5");
-        while ($row = mysqli_fetch_assoc($recent)):
-      ?>
-      <tr>
-        <td><?= htmlspecialchars($row['id']) ?></td>
-        <td>
-          <div class="user-name"><?= htmlspecialchars($row['username']) ?></div>
-          <div class="user-email"><?= htmlspecialchars($row['email']) ?></div>
-        </td>
-        <td><span class="role-badge"><?= htmlspecialchars($row['role']) ?></span></td>
-        <td>
-          <span class="status-pill <?= $row['status'] ? 'active' : 'inactive' ?>">
-            <?= $row['status'] ? 'Active' : 'Inactive' ?>
-          </span>
-        </td>
-      </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
+  <div class="table-shell">
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User Details</th>
+          <th>Role</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+          $recent = mysqli_query($conn, "SELECT * FROM users ORDER BY id DESC LIMIT 5");
+          while ($row = mysqli_fetch_assoc($recent)):
+        ?>
+        <tr>
+          <td data-label="ID"><?= htmlspecialchars($row['id']) ?></td>
+          <td data-label="User Details">
+            <div class="user-name"><?= htmlspecialchars($row['username']) ?></div>
+            <div class="user-email"><?= htmlspecialchars($row['email']) ?></div>
+          </td>
+          <td data-label="Role"><span class="role-badge"><?= htmlspecialchars($row['role']) ?></span></td>
+          <td data-label="Status">
+            <span class="status-pill <?= $row['status'] ? 'active' : 'inactive' ?>">
+              <?= $row['status'] ? 'Active' : 'Inactive' ?>
+            </span>
+          </td>
+        </tr>
+        <?php endwhile; ?>
+      </tbody>
+    </table>
+  </div>
 
 </div>

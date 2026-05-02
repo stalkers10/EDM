@@ -3,14 +3,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add New User</title>
     
     <style>
-        .form-container { max-width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        body { margin: 0; padding: 20px; background: #f6f4f5; font-family: Arial, sans-serif; }
+        .form-container { width: min(100%, 500px); margin: 24px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #800020; }
         .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
         .submit-btn { background: #800020; color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        @media (max-width: 480px) {
+            body { padding: 12px; }
+            .form-container { padding: 22px 16px; }
+        }
     </style>
 </head>
 <body>

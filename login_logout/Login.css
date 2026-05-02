@@ -12,12 +12,14 @@ body {
     font-family: 'Poppins', sans-serif;
     background-color: var(--bg-light);
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
     padding: 1rem 5%; 
     background: rgb(240, 227, 227);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.596);
@@ -41,8 +43,8 @@ nav>div{
     display: flex;
     justify-content: center;
     align-items: center;
-     
-    padding: 15px;
+    width: 100%;
+    padding: 24px 15px;
 }
 
 .Login-div {
@@ -51,7 +53,7 @@ nav>div{
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.384);
     
-    width: 500px;
+    width: min(100%, 500px);
     max-width: 600px;
     box-sizing: border-box;
 }
@@ -79,6 +81,7 @@ label {
 }
 
 input {
+    width: 100%;
     padding: 12px;
     border: 1.5px solid #ddd;
     border-radius: 10px;
@@ -98,7 +101,8 @@ input:focus {
 }
 
 #btn-Login, #btnSignUp, #btnLogout {
-    width: 30%;
+    width: 100%;
+    max-width: 240px;
     padding: 14px;
     background-color: var(--primary-color);
     color: white;
@@ -107,8 +111,9 @@ input:focus {
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 20px;
+    margin: 20px auto 0;
     transition: all ease-in-out 0.5s;
+    display: block;
 }
 
 #btn-Login:hover, #btnSignUp:hover, #btnLogout:hover {
@@ -126,7 +131,8 @@ input:focus {
 
 .selection-btm button {
     background: rgba(236, 99, 179, 0.26);
-    width: 30%;
+    width: 100%;
+    max-width: 240px;
     padding: 14px;
     border: none;
     border-radius: 10px;
@@ -140,14 +146,16 @@ input:focus {
     text-decoration: underline;
     text-decoration: none;
     transition: all ease-in-out 0.3s;
-    
+    display: block;
+    margin: 20px auto 0;
 }
 .selection-btm button:hover{
     transition-duration: 0.2s;
     transform: translateY(3px); 
 }
 #signup{
-    width: 35%;
+    width: 100%;
+    max-width: 240px;
     padding: 14px;
     background-color: var(--primary-color);
     color: white;
@@ -156,8 +164,9 @@ input:focus {
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
-    margin-top: 20px;
+    margin: 20px auto 0;
     transition: all ease-in-out 0.3s;
+    display: block;
 }
 .form-group{
     display: flex;
@@ -202,6 +211,79 @@ input:focus {
 #role option:active {
     background-color: #f2d7e5 !important;
     color: #803060 !important;
+}
+
+form {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        text-align: center;
+        padding-inline: 20px;
+    }
+
+    .header-name {
+        font-size: 1.45rem;
+    }
+
+    .body-div {
+        padding: 20px 12px 28px;
+        align-items: flex-start;
+    }
+
+    .Login-div {
+        padding: 28px 22px;
+        border-radius: 16px;
+    }
+
+    .Login-pgh {
+        font-size: 2rem;
+        margin-bottom: 24px;
+    }
+
+    label {
+        font-size: 1rem;
+        margin-bottom: -4px;
+    }
+
+    input,
+    #role {
+        font-size: 1rem;
+    }
+
+    .selection-btm button,
+    #btn-Login,
+    #btnSignUp,
+    #btnLogout,
+    #signup {
+        max-width: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .Login-div {
+        padding: 22px 16px;
+    }
+
+    .Login-pgh {
+        font-size: 1.7rem;
+    }
+
+    .login-form {
+        gap: 12px;
+    }
+
+    input,
+    #role,
+    #btn-Login,
+    #btnSignUp,
+    #btnLogout,
+    #signup,
+    .selection-btm button {
+        font-size: 0.95rem;
+    }
 }
 
 

@@ -22,14 +22,26 @@ if (!in_array($page, $allowed_pages)) {
   <title>EDM Admin – <?= ucfirst($page) ?></title>
 
   <link rel="stylesheet" href="./admin_styles/admin_style.css"/>
-
+  <?php if ($page === 'manage_docs'): ?>
+    <link rel="stylesheet" href="./Manage_docs/manage_docs.css"/>
+  <?php endif; ?>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
 </head>
-<body>
+<body class="page-<?= htmlspecialchars($page) ?>">
 
   <?php include 'sidebar.php'; ?>
+  <div class="sidebar-overlay" data-sidebar-overlay></div>
 
   <main class="main-content">
+    <div class="mobile-toolbar">
+      <button type="button" class="menu-toggle" data-sidebar-toggle aria-label="Open navigation menu">
+        <span class="material-icons-outlined">menu</span>
+      </button>
+      <div class="mobile-toolbar-copy">
+        <div class="mobile-toolbar-title">EDM Admin</div>
+        <div class="mobile-toolbar-subtitle"><?= ucwords(str_replace('_', ' ', $page)) ?></div>
+      </div>
+    </div>
     <?php
       if ($page === 'dashboard') {
           include 'dashboard.php';
@@ -43,5 +55,41 @@ if (!in_array($page, $allowed_pages)) {
       }
     ?>
   </main>
+  <script>
+    (function () {
+      const body = document.body;
+      const toggleButtons = document.querySelectorAll('[data-sidebar-toggle]');
+      const overlay = document.querySelector('[data-sidebar-overlay]');
+      const navLinks = document.querySelectorAll('.sidebar a');
+
+      function setSidebar(open) {
+        body.classList.toggle('sidebar-open', open);
+      }
+
+      toggleButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          setSidebar(!body.classList.contains('sidebar-open'));
+        });
+      });
+
+      if (overlay) {
+        overlay.addEventListener('click', () => setSidebar(false));
+      }
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          if (window.innerWidth <= 1024) {
+            setSidebar(false);
+          }
+        });
+      });
+
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 1024) {
+          setSidebar(false);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
