@@ -1,15 +1,20 @@
 <?php
 include('../../DB/database.php');
+require_once '../../DB/document_search.php';
+
+ensure_document_search_schema($conn);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
     $admin_id = $_SESSION['user_id'];
-    $parent_id = !empty($_POST['parent_id']) ? (int)$_POST['parent_id'] : "NULL";
+    $parent_id = !empty($_POST['parent_id']) ? (int)$_POST['parent_id'] : null;
 
     $file = $_FILES['file'];
-    $fileName = mysqli_real_escape_string($conn, $file['name']);
+    $fileName = trim($file['name']);
     $fileTmpName = $file['tmp_name'];
-    $fileSize = $file['size'];
     $fileError = $file['error'];
+    $author = trim($_POST['author'] ?? '');
+    $description = trim($_POST['description'] ?? '');
+    $keywords = trim($_POST['keywords'] ?? '');
 
     // 1. Check for errors
     if ($fileError === 0) {
@@ -25,20 +30,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['file'])) {
         // 2. Move file to the uploads folder
         if (move_uploaded_file($fileTmpName, $uploadDestination)) {
 
-            // 3. Insert into admin_storage
-            $sql = "INSERT INTO admin_storage (admin_id, parent_id, name, type, file_path) 
-                    VALUES ($admin_id, $parent_id, '$fileName', 'file', '$dbRelativePath')";
+            // 3. Insert into admin_storage with searchable metadata
+            $stmt = $conn->prepare("
+                INSERT INTO admin_storage (
+                    admin_id,
+                    parent_id,
+                    name,
+                    type,
+                    file_path,
+                    file_extension,
+                    author,
+                    description,
+                    keywords
+                )
+                VALUES (?, ?, ?, 'file', ?, ?, ?, ?, ?)
+            ");
+            $normalizedExt = $fileExt !== '' ? $fileExt : null;
+            $normalizedAuthor = $author !== '' ? $author : null;
+            $normalizedDescription = $description !== '' ? $description : null;
+            $normalizedKeywords = $keywords !== '' ? $keywords : null;
+            $stmt->bind_param(
+                "iissssss",
+                $admin_id,
+                $parent_id,
+                $fileName,
+                $dbRelativePath,
+                $normalizedExt,
+                $normalizedAuthor,
+                $normalizedDescription,
+                $normalizedKeywords
+            );
 
-            if (mysqli_query($conn, $sql)) {
+            if ($stmt->execute()) {
                 // Success! Redirect back to the folder you were in
                 $redirect = "../admin_dash.php?page=manage_docs";
-                if ($parent_id !== "NULL") {
+                if ($parent_id !== null) {
                     $redirect .= "&folder_id=" . $parent_id;
                 }
                 header("Location: " . $redirect . "&status=success");
             } else {
-                echo "Database Error: " . mysqli_error($conn);
+                echo "Database Error: " . $stmt->error;
             }
+            $stmt->close();
         } else {
             echo "Failed to move uploaded file.";
         }

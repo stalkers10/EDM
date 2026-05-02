@@ -5,55 +5,165 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-$current_folder = isset($_GET['folder_id']) ? (int) $_GET['folder_id'] : null;
+require_once __DIR__ . '/../../DB/document_search.php';
 
-$search = '';
-if (isset($_POST['search'])) {
-    $search = trim($_POST['search']);
-} elseif (isset($_GET['search'])) {
-    $search = trim($_GET['search']);
-}
+ensure_document_search_schema($conn);
+
+$current_folder = isset($_GET['folder_id']) ? (int) $_GET['folder_id'] : null;
+$search_state = edm_get_document_search_state($_GET);
+$has_search_filters = edm_document_search_has_filters($search_state);
+$search_summary = edm_get_document_search_summary($search_state);
+$file_types = edm_get_admin_storage_extensions($conn);
+$documents = edm_fetch_admin_storage_documents($conn, $search_state, $current_folder, true);
+
+$simple_clear_url = edm_build_url('admin_dash.php', [
+    'page' => 'manage_docs',
+    'folder_id' => $current_folder,
+]);
+
+$advanced_reset_url = edm_build_url('admin_dash.php', [
+    'page' => 'manage_docs',
+    'folder_id' => $current_folder,
+    'search_mode' => 'advanced',
+]);
 ?>
 
 <div class="content-card">
 
     <h2 class="welcome-heading">Document Manager</h2>
-    <p class="welcome-sub">Create folders and organize university resources.</p>
+    <p class="welcome-sub">Create folders, capture document metadata, and search resources with precision.</p>
 
-    <div class="action-row toolbar-card">
-        <div class="btn-group">
-            <button onclick="openModal('folderModal')" class="btn-primary" type="button">
-                <span class="material-icons-outlined">create_new_folder</span> New Folder
-            </button>
-            <button onclick="openModal('uploadModal')" class="btn-secondary" type="button">
-                <span class="material-icons-outlined">upload_file</span> Upload File
-            </button>
-            <button id="downloadBtn" class="btn-secondary" disabled onclick="downloadSelectedFile()" type="button">
-                <span class="material-icons-outlined">file_download</span> Download
-            </button>
-            <button id="shareBtn" class="btn-secondary" disabled onclick="generateShareLink()" type="button">
-                <span class="material-icons-outlined">share</span> Share
-            </button>
+    <div class="toolbar-card">
+        <div class="toolbar-top">
+            <div class="btn-group">
+                <button onclick="openModal('folderModal')" class="btn-primary" type="button">
+                    <span class="material-icons-outlined">create_new_folder</span> New Folder
+                </button>
+                <button onclick="openModal('uploadModal')" class="btn-secondary" type="button">
+                    <span class="material-icons-outlined">upload_file</span> Upload File
+                </button>
+                <button id="downloadBtn" class="btn-secondary" disabled onclick="downloadSelectedFile()" type="button">
+                    <span class="material-icons-outlined">file_download</span> Download
+                </button>
+                <button id="shareBtn" class="btn-secondary" disabled onclick="generateShareLink()" type="button">
+                    <span class="material-icons-outlined">share</span> Share
+                </button>
+            </div>
+
+            <div class="search-mode-switch" data-search-switch>
+                <button
+                    type="button"
+                    class="search-mode-btn <?= $search_state['mode'] === 'simple' ? 'is-active' : '' ?>"
+                    data-search-mode="simple"
+                    aria-pressed="<?= $search_state['mode'] === 'simple' ? 'true' : 'false' ?>">
+                    Simple Search
+                </button>
+                <button
+                    type="button"
+                    class="search-mode-btn <?= $search_state['mode'] === 'advanced' ? 'is-active' : '' ?>"
+                    data-search-mode="advanced"
+                    aria-pressed="<?= $search_state['mode'] === 'advanced' ? 'true' : 'false' ?>">
+                    Advanced Search
+                </button>
+            </div>
         </div>
 
-        <form method="post" action="admin_dash.php?page=manage_docs" class="search-form">
+        <form
+            method="get"
+            action="admin_dash.php"
+            class="search-panel simple-search-form <?= $search_state['mode'] === 'simple' ? 'is-active' : '' ?>"
+            data-search-panel="simple">
+            <input type="hidden" name="page" value="manage_docs">
             <?php if ($current_folder): ?>
                 <input type="hidden" name="folder_id" value="<?= $current_folder ?>">
             <?php endif; ?>
+            <input type="hidden" name="search_mode" value="simple">
 
             <div class="search-bar">
                 <span class="material-icons-outlined">search</span>
                 <input
                     type="text"
-                    name="search"
-                    placeholder="Search files and folders..."
-                    value="<?= htmlspecialchars($search) ?>"
-                    autocomplete="on">
-                <?php if ($search): ?>
-                    <a href="admin_dash.php?page=manage_docs<?= $current_folder ? '&folder_id=' . $current_folder : '' ?>" class="btn-clear">
+                    name="q"
+                    value="<?= htmlspecialchars($search_state['q']) ?>"
+                    placeholder="Search by name, author, description, keywords, or file type..."
+                    autocomplete="on"
+                    data-simple-search-input>
+                <?php if ($search_state['q'] !== ''): ?>
+                    <a href="<?= htmlspecialchars($simple_clear_url) ?>" class="btn-clear">
                         <span class="material-icons-outlined">close</span>
                     </a>
                 <?php endif; ?>
+            </div>
+        </form>
+
+        <form
+            method="get"
+            action="admin_dash.php"
+            class="search-panel advanced-search-form <?= $search_state['mode'] === 'advanced' ? 'is-active' : '' ?>"
+            data-search-panel="advanced">
+            <input type="hidden" name="page" value="manage_docs">
+            <?php if ($current_folder): ?>
+                <input type="hidden" name="folder_id" value="<?= $current_folder ?>">
+            <?php endif; ?>
+            <input type="hidden" name="search_mode" value="advanced">
+
+            <div class="advanced-fields">
+                <label class="filter-field">
+                    <span>Name</span>
+                    <input type="text" name="name" value="<?= htmlspecialchars($search_state['name']) ?>" placeholder="Document or folder name">
+                </label>
+
+                <label class="filter-field">
+                    <span>Item Type</span>
+                    <select name="item_type">
+                        <option value="">All items</option>
+                        <option value="file" <?= $search_state['item_type'] === 'file' ? 'selected' : '' ?>>Files only</option>
+                        <option value="folder" <?= $search_state['item_type'] === 'folder' ? 'selected' : '' ?>>Folders only</option>
+                    </select>
+                </label>
+
+                <label class="filter-field">
+                    <span>File Type</span>
+                    <select name="file_type">
+                        <option value="">Any file type</option>
+                        <?php foreach ($file_types as $extension): ?>
+                            <option value="<?= htmlspecialchars($extension) ?>" <?= $search_state['file_type'] === $extension ? 'selected' : '' ?>>
+                                <?= strtoupper(htmlspecialchars($extension)) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+
+                <label class="filter-field">
+                    <span>Author</span>
+                    <input type="text" name="author" value="<?= htmlspecialchars($search_state['author']) ?>" placeholder="Uploader or document author">
+                </label>
+
+                <label class="filter-field">
+                    <span>Date Uploaded From</span>
+                    <input type="date" name="date_from" value="<?= htmlspecialchars($search_state['date_from']) ?>">
+                </label>
+
+                <label class="filter-field">
+                    <span>Date Uploaded To</span>
+                    <input type="date" name="date_to" value="<?= htmlspecialchars($search_state['date_to']) ?>">
+                </label>
+
+                <label class="filter-field filter-field-wide">
+                    <span>Description</span>
+                    <textarea name="description" rows="3" placeholder="Search inside the saved description"><?= htmlspecialchars($search_state['description']) ?></textarea>
+                </label>
+
+                <label class="filter-field filter-field-wide">
+                    <span>Keywords</span>
+                    <input type="text" name="keywords" value="<?= htmlspecialchars($search_state['keywords']) ?>" placeholder="Comma-separated tags or keywords">
+                </label>
+            </div>
+
+            <div class="filter-actions">
+                <a href="<?= htmlspecialchars($advanced_reset_url) ?>" class="btn-secondary">
+                    <span class="material-icons-outlined">restart_alt</span> Reset
+                </a>
             </div>
         </form>
     </div>
@@ -88,17 +198,17 @@ if (isset($_POST['search'])) {
         }
         ?>
 
-        <?php if ($search): ?>
+        <?php if ($has_search_filters): ?>
             <span>/</span>
             <span style="color: var(--text-dark);">Search results</span>
         <?php endif; ?>
     </div>
 
-    <?php if ($search): ?>
+    <?php if ($has_search_filters): ?>
         <div class="search-label">
             <span class="material-icons-outlined" style="font-size:15px;">info</span>
-            Showing results for <strong>"<?= htmlspecialchars($search) ?>"</strong>
-            <?php if ($current_folder): ?> in current folder<?php endif; ?>
+            <strong><?= htmlspecialchars($search_summary) ?></strong>
+            <?php if ($current_folder): ?> in the current folder<?php endif; ?>
         </div>
     <?php endif; ?>
 
@@ -107,52 +217,39 @@ if (isset($_POST['search'])) {
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Type</th>
+                    <th>File Type</th>
+                    <th>Author</th>
                     <th>Date Created</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <?php
-                if ($search !== '') {
-                    $safe_search = mysqli_real_escape_string($conn, $search);
-
-                    if ($current_folder) {
-                        $sql = "SELECT * FROM admin_storage
-                                WHERE parent_id = $current_folder
-                                AND name LIKE '%$safe_search%'
-                                ORDER BY type DESC, name ASC";
-                    } else {
-                        $sql = "SELECT * FROM admin_storage
-                                WHERE name LIKE '%$safe_search%'
-                                ORDER BY type DESC, name ASC";
-                    }
-                } else {
-                    $sql = $current_folder
-                        ? "SELECT * FROM admin_storage WHERE parent_id = $current_folder ORDER BY type DESC, name ASC"
-                        : "SELECT * FROM admin_storage WHERE parent_id IS NULL ORDER BY type DESC, name ASC";
-                }
-                $result = mysqli_query($conn, $sql);
-                $count = mysqli_num_rows($result);
-
-                if ($count === 0):
-                ?>
+                <?php if (count($documents) === 0): ?>
                     <tr>
-                        <td colspan="4" class="table-message-cell">
+                        <td colspan="5" class="table-message-cell">
                             <div class="empty-state">
                                 <div class="material-icons-outlined">
-                                    <?= $search ? 'search_off' : 'folder_open' ?>
+                                    <?= $has_search_filters ? 'search_off' : 'folder_open' ?>
                                 </div>
                                 <p>
-                                    <?= $search
-                                        ? 'No files or folders match "' . htmlspecialchars($search) . '"'
+                                    <?= $has_search_filters
+                                        ? 'No files or folders matched the current search filters.'
                                         : 'This folder is empty. Create a folder or upload a file.' ?>
                                 </p>
                             </div>
                         </td>
                     </tr>
                 <?php else: ?>
-                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                    <?php foreach ($documents as $row): ?>
+                        <?php
+                        $is_file = $row['type'] === 'file';
+                        $file_type_label = $is_file
+                            ? strtoupper($row['file_extension'] ?: (pathinfo($row['name'], PATHINFO_EXTENSION) ?: 'FILE'))
+                            : 'FOLDER';
+                        $author_display = $row['author_display'] ?: 'Unknown';
+                        $description = trim((string) ($row['description'] ?? ''));
+                        $keywords = trim((string) ($row['keywords'] ?? ''));
+                        ?>
                         <tr data-id="<?= $row['id'] ?>">
                             <td data-label="Name">
                                 <div class="item-name">
@@ -163,13 +260,28 @@ if (isset($_POST['search'])) {
                                         </a>
                                     <?php else: ?>
                                         <span class="material-icons-outlined icon-file">description</span>
-                                        <a href="../<?= $row['file_path'] ?>" target="_blank" rel="noopener noreferrer">
+                                        <a href="../<?= htmlspecialchars($row['file_path']) ?>" target="_blank" rel="noopener noreferrer">
                                             <?= htmlspecialchars($row['name']) ?>
                                         </a>
                                     <?php endif; ?>
                                 </div>
+                                <?php if ($description !== '' || $keywords !== ''): ?>
+                                    <div class="item-meta">
+                                        <?php if ($description !== ''): ?>
+                                            <span>Description: <?= htmlspecialchars($description) ?></span>
+                                        <?php endif; ?>
+                                        <?php if ($keywords !== ''): ?>
+                                            <span>Keywords: <?= htmlspecialchars($keywords) ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                <?php endif; ?>
                             </td>
-                            <td data-label="Type"><?= ucfirst($row['type']) ?></td>
+                            <td data-label="File Type">
+                                <span class="type-badge"><?= htmlspecialchars($file_type_label) ?></span>
+                            </td>
+                            <td data-label="Author">
+                                <span class="author-text"><?= htmlspecialchars($author_display) ?></span>
+                            </td>
                             <td data-label="Date Created"><?= date('d M Y', strtotime($row['created_at'])) ?></td>
                             <td data-label="Actions">
                                 <a href="Actions/delete_action.php?id=<?= $row['id'] ?>"
@@ -179,7 +291,7 @@ if (isset($_POST['search'])) {
                                 </a>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>
@@ -192,7 +304,10 @@ if (isset($_POST['search'])) {
         <h3>Create New Folder</h3>
         <form action="Actions/folder_action.php" method="POST">
             <input type="hidden" name="parent_id" value="<?= $current_folder ?>">
-            <input type="text" name="folder_name" placeholder="Folder name..." required>
+            <div class="modal-field">
+                <label for="adminFolderName">Folder Name</label>
+                <input id="adminFolderName" type="text" name="folder_name" placeholder="Folder name..." required>
+            </div>
             <div class="modal-actions">
                 <button type="button" class="btn-cancel" onclick="closeModal('folderModal')">Cancel</button>
                 <button type="submit" name="create" class="btn-primary">
@@ -208,7 +323,39 @@ if (isset($_POST['search'])) {
         <h3>Upload File</h3>
         <form action="Actions/upload_action.php" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="parent_id" value="<?= $current_folder ?>">
-            <input type="file" name="file" required style="margin-bottom:14px; font-size:13px; width:100%;">
+
+            <div class="modal-field">
+                <label for="adminUploadFile">Document File</label>
+                <input id="adminUploadFile" type="file" name="file" required>
+            </div>
+
+            <div class="modal-field">
+                <label for="adminUploadAuthor">Author</label>
+                <input
+                    id="adminUploadAuthor"
+                    type="text"
+                    name="author"
+                    placeholder="Leave blank to use your admin username">
+            </div>
+
+            <div class="modal-field">
+                <label for="adminUploadDescription">Description</label>
+                <textarea
+                    id="adminUploadDescription"
+                    name="description"
+                    rows="3"
+                    placeholder="Short summary of what this file contains"></textarea>
+            </div>
+
+            <div class="modal-field">
+                <label for="adminUploadKeywords">Keywords</label>
+                <input
+                    id="adminUploadKeywords"
+                    type="text"
+                    name="keywords"
+                    placeholder="exam, syllabus, policy, semester 2">
+            </div>
+
             <div class="modal-actions">
                 <button type="button" class="btn-cancel" onclick="closeModal('uploadModal')">Cancel</button>
                 <button type="submit" class="btn-primary">
@@ -236,38 +383,93 @@ if (isset($_POST['search'])) {
         });
     });
 
-    const searchInput = document.querySelector('.search-bar input');
-    let debounceTimer;
+    (function () {
+        const modeButtons = document.querySelectorAll('[data-search-mode]');
+        const modePanels = document.querySelectorAll('[data-search-panel]');
+        const searchInput = document.querySelector('[data-simple-search-input]');
+        const advancedForm = document.querySelector('.advanced-search-form');
+        const advancedFields = advancedForm
+            ? advancedForm.querySelectorAll('input:not([type="hidden"]):not([type="submit"]):not([type="button"]), select, textarea')
+            : [];
+        let simpleSearchTimer;
+        let advancedSearchTimer;
 
-    if (searchInput) {
-        searchInput.addEventListener('input', () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                searchInput.closest('form').submit();
-            }, 400);
+        function activateMode(mode) {
+            modeButtons.forEach(button => {
+                const isActive = button.dataset.searchMode === mode;
+                button.classList.toggle('is-active', isActive);
+                button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+            });
+
+            modePanels.forEach(panel => {
+                panel.classList.toggle('is-active', panel.dataset.searchPanel === mode);
+            });
+        }
+
+        modeButtons.forEach(button => {
+            button.addEventListener('click', () => activateMode(button.dataset.searchMode));
         });
 
-        if ("<?= $search ?>" !== "") {
-            searchInput.focus();
-            const currentValue = searchInput.value;
-            searchInput.value = '';
-            searchInput.value = currentValue;
+        activateMode('<?= $search_state['mode'] ?>');
+
+        function submitForm(form) {
+            if (!form) {
+                return;
+            }
+
+            if (typeof form.requestSubmit === 'function') {
+                form.requestSubmit();
+                return;
+            }
+
+            form.submit();
         }
-    }
+
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                clearTimeout(simpleSearchTimer);
+                simpleSearchTimer = setTimeout(() => {
+                    submitForm(searchInput.closest('form'));
+                }, 400);
+            });
+        }
+
+        advancedFields.forEach(field => {
+            const queueImmediateSubmit = () => {
+                clearTimeout(advancedSearchTimer);
+                submitForm(advancedForm);
+            };
+
+            const queueDebouncedSubmit = () => {
+                clearTimeout(advancedSearchTimer);
+                advancedSearchTimer = setTimeout(() => {
+                    submitForm(advancedForm);
+                }, 400);
+            };
+
+            if (field.tagName === 'SELECT' || field.type === 'date') {
+                field.addEventListener('change', queueImmediateSubmit);
+                return;
+            }
+
+            field.addEventListener('input', queueDebouncedSubmit);
+            field.addEventListener('change', queueImmediateSubmit);
+        });
+    })();
 
     let selectedFileUrl = null;
     let selectedFileName = null;
     let selectedFileId = null;
 
     document.addEventListener('DOMContentLoaded', function () {
-        const rows = document.querySelectorAll('.user-table tbody tr');
+        const rows = document.querySelectorAll('.user-table tbody tr[data-id]');
         const downloadBtn = document.getElementById('downloadBtn');
         const shareBtn = document.getElementById('shareBtn');
 
         rows.forEach(row => {
             row.addEventListener('click', function () {
                 const isFile = this.querySelector('.icon-file') !== null;
-                const fileLink = this.querySelector('a');
+                const fileLink = this.querySelector('.item-name a');
 
                 rows.forEach(item => item.classList.remove('selected-row'));
 
@@ -276,7 +478,6 @@ if (isset($_POST['search'])) {
                     selectedFileUrl = fileLink.getAttribute('href');
                     selectedFileName = fileLink.textContent.trim();
                     selectedFileId = this.getAttribute('data-id');
-
                     if (downloadBtn) downloadBtn.disabled = false;
                     if (shareBtn) shareBtn.disabled = false;
                 } else {
